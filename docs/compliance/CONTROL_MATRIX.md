@@ -23,3 +23,4 @@
 | Supplier risk | KYC/AML vendor, custody provider, cloud | Vendor risk review |
 | Privacy | Personal data handling | Data map, retention policy, access log |
 | ISO 27001 | ISMS operation and improvement | Risk treatment plan, SoA, internal audit |
+| Evidence freshness | Expiring control artifacts | `services/compliance/evidence` register tests |
