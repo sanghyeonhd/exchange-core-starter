@@ -16,7 +16,7 @@
 | Ledger integrity | Double-entry per asset | Reconciliation report |
 | Matching integrity | Deterministic replay | Replay report and book hash |
 | Market surveillance | Abnormal trading alerts | Alert record and disposition |
-| Vulnerability management | Code and dependency scanning | gitleaks/govulncheck/trivy CI artifact |
+| Vulnerability management | Code and dependency scanning on Go 1.25.12+ | gitleaks/govulncheck/trivy CI artifact |
 | Incident response | Detection, escalation, containment | Incident drill report |
 | Business continuity | Backup and recovery | Restore drill report |
 | Change management | Production release controls | Release ticket, approval, rollback plan |

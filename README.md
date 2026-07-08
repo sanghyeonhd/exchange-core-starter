@@ -23,6 +23,7 @@ This repository is a clean-room implementation. Public exchange repositories are
 make test
 make clone-sources
 make audit-sources
+go run ./services/gateway/cmd/gateway
 ```
 
 ## Design Entry Points

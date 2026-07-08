@@ -2,7 +2,7 @@
 
 ## Prerequisites
 
-- Go 1.22 or newer
+- Go 1.25.12 or newer
 - Docker or Docker Compose
 - Make
 - Git
@@ -37,4 +37,3 @@ Reference repositories are cloned to `~/exchange-lab/sources`. They are analysis
 - Confirm `WITHDRAWALS_ENABLED=false`.
 - Do not place real private keys or mnemonics in local config.
 - Use mock wallet flows until a production security review exists.
-

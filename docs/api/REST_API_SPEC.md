@@ -33,6 +33,8 @@
 | GET | `/orderbook/{symbol}` | Current book snapshot |
 | GET | `/trades/{symbol}` | Recent trades |
 | GET | `/klines/{symbol}` | OHLCV candles |
+| GET | `/readiness/spot-launch` | Regulated spot launch readiness gate |
+| GET | `/readiness/derivatives` | Derivatives enablement readiness gate |
 
 ## Trading Endpoints
 
@@ -87,4 +89,3 @@ Withdrawals are disabled by default in local development.
 | POST | `/futures/leverage` | Set isolated leverage |
 | GET | `/futures/funding-rate` | Current funding rate |
 | GET | `/futures/funding-history` | Funding payments |
-
