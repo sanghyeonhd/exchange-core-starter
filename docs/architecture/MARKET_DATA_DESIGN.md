@@ -2,9 +2,9 @@
 
 ## Implementation Status
 
-Implemented: `services/market-data/marketdata` hub with per-channel monotonic sequences, non-blocking publication (slow subscribers are dropped and must resubscribe), and spec envelopes for `trades` and `orderbook` (full snapshots). The spot exchange publishes under its matching lock so event order matches matching order. The gateway serves `/ws/public` over a dependency-free RFC 6455 implementation (`libs/ws`); clients receive a fresh orderbook snapshot on connect.
+Implemented: `services/market-data/marketdata` hub with per-channel monotonic sequences, non-blocking publication (slow subscribers are dropped and must resubscribe), and spec envelopes for `trades`, `orderbook` (full snapshots), `ticker` (24h rolling stats), and `kline` (OHLCV candles for 9 intervals: 1m, 3m, 5m, 15m, 30m, 1h, 4h, 1d, 1w). The spot exchange publishes under its matching lock so event order matches matching order. The gateway serves `/ws/public` over a dependency-free RFC 6455 implementation (`libs/ws`); clients receive a fresh orderbook snapshot on connect. `TickerAggregator` maintains a rolling 24h window of trades for last/high/low/volume/change. `KlineAggregator` tracks in-progress OHLCV candles per interval.
 
-Pending: orderbook deltas, `ticker`/`kline` channels, private streams, and persistence/archival.
+Pending: orderbook deltas, monthly kline (1M), private streams, and persistence/archival.
 
 ## Responsibilities
 

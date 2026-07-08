@@ -26,7 +26,9 @@ Goal: seeded internal balances can trade BTC-USDT end to end.
 - Matching engine: in-memory price-time priority implemented, with depth snapshot accessor
 - Spot settlement: trade-to-ledger builder implemented
 - Composition: `services/oms/spotexchange` wires order placement, reservation, matching, per-trade settlement, excess-reservation release, cancel, open orders, trades, and balances; served by the gateway REST API
-- Public WebSocket projections: implemented — `/ws/public` streams trades and orderbook snapshots with per-channel sequences (`services/market-data`, `libs/ws`); private streams pending
+- Public WebSocket projections: implemented — `/ws/public` streams trades, orderbook snapshots, ticker (24h rolling), and kline candles (9 intervals) with per-channel sequences (`services/market-data`, `libs/ws`); private streams pending
+- Repository interface: implemented — `AccountRepository` and `LedgerRepository` abstractions in `services/account/account` and `services/ledger/ledger`; PostgreSQL skeleton under build tag `postgres`
+- Admin API backend: implemented — `services/admin-api` on separate port `:8081` with market halt/resume, user/balance queries, withdrawal approval/rejection, audit log, and ledger inspection
 
 Exit test:
 

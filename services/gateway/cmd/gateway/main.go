@@ -6,6 +6,7 @@ import (
 	"os"
 
 	"github.com/exchange-core-starter/exchange-core-starter/libs/audit"
+	"github.com/exchange-core-starter/exchange-core-starter/services/admin-api/adminapi"
 	"github.com/exchange-core-starter/exchange-core-starter/services/gateway/httpapi"
 	"github.com/exchange-core-starter/exchange-core-starter/services/market-data/marketdata"
 	"github.com/exchange-core-starter/exchange-core-starter/services/matching-engine/wal"
@@ -35,6 +36,13 @@ func main() {
 
 	marketData := marketdata.NewHub()
 	exchange.SetMarketData(marketData)
+
+	// Ticker and kline aggregators feed from matching trades and publish
+	// through the same market data hub.
+	market := exchange.Market()
+	tickerAgg := marketdata.NewTickerAggregator(marketData, market.Symbol, market.PriceScale, market.QuantityScale)
+	klineAgg := marketdata.NewKlineAggregator(marketData, market.Symbol, market.PriceScale, market.QuantityScale)
+	exchange.SetAggregators(tickerAgg, klineAgg)
 
 	// MATCHING_WAL_PATH enables the write-ahead command log; accepted
 	// matching commands are fsynced to this file before they reach the book.
@@ -68,19 +76,38 @@ func main() {
 	}
 
 	// Withdrawals stay disabled by default; mainnet stays disabled.
+	auditLog := audit.NewLog()
 	walletService := wallet.NewService(
 		wallet.Config{MainnetEnabled: false, WithdrawalsEnabled: false},
 		wallet.NewMockAdapter(),
 		wallet.NewWhitelist(),
-		audit.NewLog(),
+		auditLog,
 	)
 	coordinator := wallet.NewCoordinator(walletService, exchange)
 
+	// Public gateway on :8080.
 	server := httpapi.NewServer(httpapi.Deps{
 		Exchange:   exchange,
 		Wallet:     coordinator,
 		MarketData: marketData,
 	})
+
+	// Admin API on a separate port (default :8081, override with ADMIN_PORT).
+	adminPort := os.Getenv("ADMIN_PORT")
+	if adminPort == "" {
+		adminPort = ":8081"
+	}
+	adminServer := adminapi.NewServer(adminapi.Deps{
+		Exchange: exchange,
+		Wallet:   coordinator,
+		AuditLog: auditLog,
+	})
+	go func() {
+		log.Printf("admin API listening on %s (dev auth: X-ADMIN-ID header)", adminPort)
+		if err := http.ListenAndServe(adminPort, adminServer.Handler()); err != nil {
+			log.Fatalf("admin API: %v", err)
+		}
+	}()
 
 	log.Println("gateway listening on :8080 (dev auth: X-USER-ID header, demo users 1 and 2 seeded, ws at /ws/public)")
 	if err := http.ListenAndServe(":8080", server.Handler()); err != nil {

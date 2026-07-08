@@ -8,15 +8,17 @@ This repository is a clean-room implementation. Public exchange repositories are
 
 - Regulated exchange roadmap: user web, independent admin web, backend, matching engine, wallet gateway, KYC, AML, Travel Rule, whitelists, ISMS/ISO evidence, and Korean VASP readiness.
 - Trading core (implemented, in-memory): spot exchange composition (`services/oms/spotexchange`) wiring OMS validation, balance reservation, price-time matching, per-trade double-entry settlement, excess-reservation release, cancel, open orders, trades, and balances.
+- Repository interface (implemented): `AccountRepository` and `LedgerRepository` abstractions (`services/account/account`, `services/ledger/ledger`). In-memory is the default; PostgreSQL skeleton available under build tag `postgres`.
 - Wallet flows (implemented, mock adapter): deposit address, confirmed deposits and broadcasted withdrawals settle as balanced idempotent ledger transactions; withdrawal requests lock amount+fee, audited approval/rejection, rejection releases the lock.
 - Matching recovery (implemented): fsynced command WAL (`services/matching-engine/wal`), orderbook snapshot/restore with SHA-256 book hash, atomic checkpoints, and deterministic replay proven by `tests/replay` (full replay, snapshot + tail, repeated recovery).
-- Market data WebSocket (implemented): `/ws/public` streams trades and orderbook snapshots with per-channel monotonic sequences (`services/market-data`), served over a dependency-free RFC 6455 implementation (`libs/ws`).
+- Market data WebSocket (implemented): `/ws/public` streams trades, orderbook snapshots, ticker, and kline candles with per-channel monotonic sequences (`services/market-data`), served over a dependency-free RFC 6455 implementation (`libs/ws`). Ticker aggregates 24h rolling stats; kline supports 9 intervals (1m–1w).
 - Gateway REST API (implemented): public market data plus authenticated trading, account, and wallet endpoints following `docs/api/REST_API_SPEC.md`. Authentication is a development placeholder (`X-USER-ID` header); API key + HMAC signing is pending.
+- Admin API (implemented): separate port `:8081` serving market halt/resume, user/balance queries, withdrawal approval/rejection, audit log, and ledger inspection (`services/admin-api`). Dev auth via `X-ADMIN-ID` header; all state changes are audit-logged.
 - User web shell (`apps/web`): connects to the local gateway with a mock-data fallback. Admin shell (`apps/admin`) remains static.
 - Compliance gating: KYC/AML/listing decision packages, readiness gates for spot launch and derivatives, evidence register, RBAC, tamper-evident audit log.
 - Overall design contracts: REST/WebSocket specs, proto interfaces, database DDL, event model, wallet/risk/futures design.
 
-Not yet implemented: persistent account/ledger storage, snapshot scheduling and WAL rotation, orderbook deltas and ticker/kline/private streams, testnet wallet adapters, futures/margin/liquidation services, admin API backend.
+Not yet implemented: PostgreSQL storage queries, snapshot scheduling and WAL rotation, orderbook deltas and private streams, testnet wallet adapters, futures/margin/liquidation services, admin frontend integration.
 
 ## Safety Defaults
 
@@ -32,10 +34,11 @@ Not yet implemented: persistent account/ledger storage, snapshot scheduling and 
 ```
 apps/          user and admin web product shells
 services/      gateway, oms (+spotexchange), matching-engine, settlement (spot, funding),
-               ledger, account, wallet-gateway, kyc, aml, compliance, auth, listing, risk, ...
+               ledger, account, wallet-gateway, admin-api, market-data, kyc, aml,
+               compliance, auth, listing, risk, ...
 libs/          decimal, audit, ws (RFC 6455), (others pending)
 docs/          architecture, api, compliance, database, security, runbooks, adr
-tests/         integration (spot loop, wallet funding, compliance gates)
+tests/         integration (spot loop, wallet funding, compliance gates, replay)
 ```
 
 ## Local Commands
@@ -66,7 +69,19 @@ curl localhost:8080/api/v1/account/balances -H 'X-USER-ID: 1'
 curl localhost:8080/api/v1/readiness/spot-launch
 ```
 
-Public market data stream: connect a WebSocket client to `ws://localhost:8080/ws/public`. The first message is an orderbook snapshot (`sequence: 0`); trades and book updates follow with per-channel sequences.
+Admin API tour (`:8081`, development auth `X-ADMIN-ID`):
+
+```bash
+curl localhost:8081/admin/v1/health
+curl localhost:8081/admin/v1/users -H 'X-ADMIN-ID: admin1'
+curl localhost:8081/admin/v1/users/1/balances -H 'X-ADMIN-ID: admin1'
+curl -X POST localhost:8081/admin/v1/markets/BTC-USDT/halt -H 'X-ADMIN-ID: admin1'
+curl -X POST localhost:8081/admin/v1/markets/BTC-USDT/resume -H 'X-ADMIN-ID: admin1'
+curl localhost:8081/admin/v1/audit-log -H 'X-ADMIN-ID: admin1'
+curl localhost:8081/admin/v1/ledger/entries -H 'X-ADMIN-ID: admin1'
+```
+
+Public market data stream: connect a WebSocket client to `ws://localhost:8080/ws/public`. The first message is an orderbook snapshot (`sequence: 0`); trades, book updates, ticker snapshots, and kline candles follow with per-channel sequences.
 
 ## Design Entry Points
 

@@ -10,6 +10,8 @@ import (
 const (
 	ChannelTrades    = "trades"
 	ChannelOrderbook = "orderbook"
+	ChannelTicker    = "ticker"
+	ChannelKline     = "kline"
 )
 
 // Envelope is the wire format for every channel message.
@@ -109,6 +111,16 @@ func (h *Hub) PublishTrade(symbol string, data TradeData) {
 // PublishOrderbook broadcasts an orderbook snapshot.
 func (h *Hub) PublishOrderbook(symbol string, data OrderbookData) {
 	h.publish(ChannelOrderbook, symbol, data)
+}
+
+// PublishTicker broadcasts a ticker snapshot.
+func (h *Hub) PublishTicker(symbol string, data TickerData) {
+	h.publish(ChannelTicker, symbol, data)
+}
+
+// PublishKline broadcasts a kline candle update.
+func (h *Hub) PublishKline(symbol string, data KlineData) {
+	h.publish(ChannelKline, symbol, data)
 }
 
 func (h *Hub) publish(channel, symbol string, data any) {

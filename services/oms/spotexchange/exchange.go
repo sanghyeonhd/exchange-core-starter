@@ -60,7 +60,7 @@ type Exchange struct {
 	market oms.Market
 	book   *engine.OrderBook
 
-	accounts      *account.Store
+	accounts      account.AccountRepository
 	userAccounts  map[string]int64
 	feeAccounts   map[string]int64
 	extAccounts   map[string]int64
@@ -75,6 +75,8 @@ type Exchange struct {
 	lastJournalSeq int64
 
 	marketData MarketDataPublisher
+	tickerAgg  *marketdata.TickerAggregator
+	klineAgg   *marketdata.KlineAggregator
 }
 
 // MarketDataPublisher receives public market events. Implemented by
@@ -101,7 +103,60 @@ func New(market oms.Market) (*Exchange, error) {
 }
 
 func (e *Exchange) Market() oms.Market {
+	e.mu.Lock()
+	defer e.mu.Unlock()
 	return e.market
+}
+
+// HaltMarket sets the market status to HALTED. New orders are rejected
+// while halted; existing resting orders remain on the book.
+func (e *Exchange) HaltMarket() {
+	e.mu.Lock()
+	defer e.mu.Unlock()
+	e.market.Status = oms.MarketHalted
+}
+
+// ResumeMarket sets the market status back to TRADING.
+func (e *Exchange) ResumeMarket() {
+	e.mu.Lock()
+	defer e.mu.Unlock()
+	e.market.Status = oms.MarketTrading
+}
+
+// Users returns the unique set of user IDs that have accounts.
+func (e *Exchange) Users() []int64 {
+	e.mu.Lock()
+	defer e.mu.Unlock()
+
+	seen := make(map[int64]struct{})
+	for key := range e.userAccounts {
+		// key format: "userID:asset"
+		for i := 0; i < len(key); i++ {
+			if key[i] == ':' {
+				uid := parseUserID(key[:i])
+				if uid > 0 {
+					seen[uid] = struct{}{}
+				}
+				break
+			}
+		}
+	}
+	users := make([]int64, 0, len(seen))
+	for uid := range seen {
+		users = append(users, uid)
+	}
+	return users
+}
+
+func parseUserID(s string) int64 {
+	var n int64
+	for _, c := range s {
+		if c < '0' || c > '9' {
+			return 0
+		}
+		n = n*10 + int64(c-'0')
+	}
+	return n
 }
 
 // SetJournal enables write-ahead logging of matching commands. Must be set
@@ -121,17 +176,31 @@ func (e *Exchange) SetMarketData(publisher MarketDataPublisher) {
 	e.marketData = publisher
 }
 
+// SetAggregators enables ticker and kline aggregation. Must be set before
+// the exchange serves traffic.
+func (e *Exchange) SetAggregators(ticker *marketdata.TickerAggregator, kline *marketdata.KlineAggregator) {
+	e.mu.Lock()
+	defer e.mu.Unlock()
+	e.tickerAgg = ticker
+	e.klineAgg = kline
+}
+
 // publishTrade and publishOrderbook are called with e.mu held so events are
 // emitted in matching order; the hub never blocks on subscribers.
 func (e *Exchange) publishTrade(trade engine.Trade) {
-	if e.marketData == nil {
-		return
+	if e.marketData != nil {
+		e.marketData.PublishTrade(e.market.Symbol, marketdata.TradeData{
+			Price:     decimal.New(trade.Price, e.market.PriceScale).String(),
+			Quantity:  decimal.New(trade.Quantity, e.market.QuantityScale).String(),
+			TakerSide: string(trade.Side),
+		})
 	}
-	e.marketData.PublishTrade(e.market.Symbol, marketdata.TradeData{
-		Price:     decimal.New(trade.Price, e.market.PriceScale).String(),
-		Quantity:  decimal.New(trade.Quantity, e.market.QuantityScale).String(),
-		TakerSide: string(trade.Side),
-	})
+	if e.tickerAgg != nil {
+		e.tickerAgg.RecordTrade(trade.Price, trade.Quantity)
+	}
+	if e.klineAgg != nil {
+		e.klineAgg.RecordTrade(trade.Price, trade.Quantity)
+	}
 }
 
 const publishedDepthLevels = 50
@@ -458,7 +527,7 @@ func (e *Exchange) Balances(userID int64) []account.Balance {
 }
 
 // Accounts exposes the underlying store for reconciliation and tests.
-func (e *Exchange) Accounts() *account.Store {
+func (e *Exchange) Accounts() account.AccountRepository {
 	return e.accounts
 }
 
