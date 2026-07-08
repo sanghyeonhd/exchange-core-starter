@@ -7,7 +7,7 @@ This repository is a clean-room implementation. Public exchange repositories are
 ## Current Scope
 
 - Phase 0: source clone/audit scripts and architecture decisions.
-- Phase 1: deterministic spot orderbook matching with fixed-point integer values.
+- Phase 1: deterministic spot orderbook matching, OMS validation, in-memory account projection, and spot settlement integration tests.
 - Overall design contracts: REST/WebSocket specs, proto interfaces, database DDL, event model, wallet/risk/futures design.
 
 ## Safety Defaults

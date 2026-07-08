@@ -4,6 +4,8 @@
 
 The first settlement implementation converts one spot trade into one double-entry ledger transaction.
 
+The request identifies buyer and seller base/quote accounts separately. This avoids relying on one account id for multiple assets and keeps settlement independent from account lookup.
+
 ## Direction Convention
 
 Within exchange wallet accounts:
@@ -22,6 +24,8 @@ For a BTC-USDT trade where the buyer is the taker:
 - Fee revenue debits maker fee plus taker fee.
 - Buyer credits quote notional plus taker fee.
 
+If the buyer was reserved using a taker-fee upper bound but settles as maker, OMS/account projection releases the unused quote lock after settlement.
+
 ## Taker Sell
 
 When the seller is the taker:
@@ -33,4 +37,3 @@ When the seller is the taker:
 ## Idempotency
 
 Settlement idempotency key is `spot-trade:{trade_id}`. Database storage must enforce uniqueness on this key before retry-based workers are added.
-

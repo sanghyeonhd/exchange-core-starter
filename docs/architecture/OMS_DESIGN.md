@@ -58,4 +58,4 @@ The OMS stores an acceptance record before publishing to matching. If a client r
 - Trailing stops
 - Cross margin
 - Advanced self-trade prevention modes beyond the default policy hook
-
+- Market buy by quote amount. The first implementation rejects market orders until quote-side controls are designed.

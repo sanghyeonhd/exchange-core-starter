@@ -29,9 +29,11 @@ type Request struct {
 	BaseAsset  string
 	QuoteAsset string
 
-	BuyerAccountID      int64
-	SellerAccountID     int64
-	FeeRevenueAccountID int64
+	BuyerBaseAccountID   int64
+	BuyerQuoteAccountID  int64
+	SellerBaseAccountID  int64
+	SellerQuoteAccountID int64
+	FeeRevenueAccountID  int64
 
 	Price         int64
 	Quantity      int64
@@ -88,7 +90,7 @@ func BuildTradeTransaction(req Request) (ledger.Transaction, Amounts, error) {
 		IdempotencyKey: "spot-trade:" + req.TradeID,
 		Entries: []ledger.Entry{
 			{
-				AccountID:     req.BuyerAccountID,
+				AccountID:     req.BuyerBaseAccountID,
 				Asset:         req.BaseAsset,
 				Debit:         req.Quantity,
 				Type:          ledger.EntryTrade,
@@ -96,7 +98,7 @@ func BuildTradeTransaction(req Request) (ledger.Transaction, Amounts, error) {
 				ReferenceID:   req.TradeID,
 			},
 			{
-				AccountID:     req.SellerAccountID,
+				AccountID:     req.SellerBaseAccountID,
 				Asset:         req.BaseAsset,
 				Credit:        req.Quantity,
 				Type:          ledger.EntryTrade,
@@ -104,7 +106,7 @@ func BuildTradeTransaction(req Request) (ledger.Transaction, Amounts, error) {
 				ReferenceID:   req.TradeID,
 			},
 			{
-				AccountID:     req.SellerAccountID,
+				AccountID:     req.SellerQuoteAccountID,
 				Asset:         req.QuoteAsset,
 				Debit:         notional - amounts.SellerFee,
 				Type:          ledger.EntryTrade,
@@ -120,7 +122,7 @@ func BuildTradeTransaction(req Request) (ledger.Transaction, Amounts, error) {
 				ReferenceID:   req.TradeID,
 			},
 			{
-				AccountID:     req.BuyerAccountID,
+				AccountID:     req.BuyerQuoteAccountID,
 				Asset:         req.QuoteAsset,
 				Credit:        notional + amounts.BuyerFee,
 				Type:          ledger.EntryTrade,
@@ -140,7 +142,7 @@ func validateRequest(req Request) error {
 	if req.TradeID == "" || req.Symbol == "" || req.BaseAsset == "" || req.QuoteAsset == "" {
 		return ErrInvalidSettlement
 	}
-	if req.BuyerAccountID <= 0 || req.SellerAccountID <= 0 || req.FeeRevenueAccountID <= 0 {
+	if req.BuyerBaseAccountID <= 0 || req.BuyerQuoteAccountID <= 0 || req.SellerBaseAccountID <= 0 || req.SellerQuoteAccountID <= 0 || req.FeeRevenueAccountID <= 0 {
 		return ErrInvalidSettlement
 	}
 	if req.Price <= 0 || req.Quantity <= 0 || req.QuantityScale < 0 {

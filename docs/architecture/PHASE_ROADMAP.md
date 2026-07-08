@@ -11,20 +11,34 @@ Status: in progress.
 
 ## Phase 1: Minimal Spot Loop
 
+Status: in progress.
+
 Goal: seeded internal balances can trade BTC-USDT end to end.
 
 - Market config
-- Account projection
+- Account projection: in-memory MVP implemented for tests
 - Ledger storage
-- OMS validation and idempotency
-- Matching engine
-- Spot settlement
+- OMS validation and reservation calculation: initial limit-order checks implemented
+- Matching engine: in-memory price-time priority implemented
+- Spot settlement: trade-to-ledger builder implemented
 - Public/private WebSocket projections
 
 Exit test:
 
 ```text
 Alice USDT + Bob BTC -> buy/sell match -> settlement -> balanced ledger -> updated balances
+```
+
+Current integration coverage:
+
+```text
+Alice USDT 10000 + Bob BTC 1
+  -> Alice limit buy reserves quote + max fee
+  -> Bob limit sell reserves base
+  -> Matching creates one trade
+  -> Settlement builds balanced ledger transaction
+  -> Account projection applies balances and releases excess reservation
+  -> Duplicate settlement apply is idempotent
 ```
 
 ## Phase 2: Wallet MVP
@@ -67,4 +81,3 @@ Alice USDT + Bob BTC -> buy/sell match -> settlement -> balanced ledger -> updat
 - Load test
 - p99 latency targets
 - Hot symbol sharding review
-

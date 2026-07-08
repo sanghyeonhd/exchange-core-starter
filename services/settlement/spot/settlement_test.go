@@ -8,19 +8,21 @@ import (
 
 func TestBuildTradeTransactionTakerBuy(t *testing.T) {
 	tx, amounts, err := BuildTradeTransaction(Request{
-		TradeID:             "trd-1",
-		Symbol:              "BTC-USDT",
-		BaseAsset:           "BTC",
-		QuoteAsset:          "USDT",
-		BuyerAccountID:      10,
-		SellerAccountID:     20,
-		FeeRevenueAccountID: 30,
-		Price:               50_000_00,
-		Quantity:            10_000_000,
-		QuantityScale:       8,
-		TakerSide:           Buy,
-		MakerFeeRatePPM:     100,
-		TakerFeeRatePPM:     200,
+		TradeID:              "trd-1",
+		Symbol:               "BTC-USDT",
+		BaseAsset:            "BTC",
+		QuoteAsset:           "USDT",
+		BuyerBaseAccountID:   10,
+		BuyerQuoteAccountID:  11,
+		SellerBaseAccountID:  20,
+		SellerQuoteAccountID: 21,
+		FeeRevenueAccountID:  30,
+		Price:                50_000_00,
+		Quantity:             10_000_000,
+		QuantityScale:        8,
+		TakerSide:            Buy,
+		MakerFeeRatePPM:      100,
+		TakerFeeRatePPM:      200,
 	})
 	if err != nil {
 		t.Fatalf("BuildTradeTransaction: %v", err)
@@ -34,26 +36,28 @@ func TestBuildTradeTransactionTakerBuy(t *testing.T) {
 	assertValid(t, tx)
 	assertEntry(t, tx, 10, "BTC", 10_000_000, 0)
 	assertEntry(t, tx, 20, "BTC", 0, 10_000_000)
-	assertEntry(t, tx, 20, "USDT", 499_950, 0)
+	assertEntry(t, tx, 21, "USDT", 499_950, 0)
 	assertEntry(t, tx, 30, "USDT", 150, 0)
-	assertEntry(t, tx, 10, "USDT", 0, 500_100)
+	assertEntry(t, tx, 11, "USDT", 0, 500_100)
 }
 
 func TestBuildTradeTransactionTakerSell(t *testing.T) {
 	tx, amounts, err := BuildTradeTransaction(Request{
-		TradeID:             "trd-2",
-		Symbol:              "BTC-USDT",
-		BaseAsset:           "BTC",
-		QuoteAsset:          "USDT",
-		BuyerAccountID:      10,
-		SellerAccountID:     20,
-		FeeRevenueAccountID: 30,
-		Price:               50_000_00,
-		Quantity:            10_000_000,
-		QuantityScale:       8,
-		TakerSide:           Sell,
-		MakerFeeRatePPM:     100,
-		TakerFeeRatePPM:     200,
+		TradeID:              "trd-2",
+		Symbol:               "BTC-USDT",
+		BaseAsset:            "BTC",
+		QuoteAsset:           "USDT",
+		BuyerBaseAccountID:   10,
+		BuyerQuoteAccountID:  11,
+		SellerBaseAccountID:  20,
+		SellerQuoteAccountID: 21,
+		FeeRevenueAccountID:  30,
+		Price:                50_000_00,
+		Quantity:             10_000_000,
+		QuantityScale:        8,
+		TakerSide:            Sell,
+		MakerFeeRatePPM:      100,
+		TakerFeeRatePPM:      200,
 	})
 	if err != nil {
 		t.Fatalf("BuildTradeTransaction: %v", err)
@@ -62,24 +66,26 @@ func TestBuildTradeTransactionTakerSell(t *testing.T) {
 		t.Fatalf("fees = buyer %d seller %d, want 50/100", amounts.BuyerFee, amounts.SellerFee)
 	}
 	assertValid(t, tx)
-	assertEntry(t, tx, 20, "USDT", 499_900, 0)
+	assertEntry(t, tx, 21, "USDT", 499_900, 0)
 	assertEntry(t, tx, 30, "USDT", 150, 0)
-	assertEntry(t, tx, 10, "USDT", 0, 500_050)
+	assertEntry(t, tx, 11, "USDT", 0, 500_050)
 }
 
 func TestRejectInvalidSettlement(t *testing.T) {
 	_, _, err := BuildTradeTransaction(Request{
-		TradeID:             "trd-3",
-		Symbol:              "BTC-USDT",
-		BaseAsset:           "BTC",
-		QuoteAsset:          "USDT",
-		BuyerAccountID:      10,
-		SellerAccountID:     20,
-		FeeRevenueAccountID: 30,
-		Price:               50_000_00,
-		Quantity:            10_000_000,
-		QuantityScale:       8,
-		TakerSide:           "HOLD",
+		TradeID:              "trd-3",
+		Symbol:               "BTC-USDT",
+		BaseAsset:            "BTC",
+		QuoteAsset:           "USDT",
+		BuyerBaseAccountID:   10,
+		BuyerQuoteAccountID:  11,
+		SellerBaseAccountID:  20,
+		SellerQuoteAccountID: 21,
+		FeeRevenueAccountID:  30,
+		Price:                50_000_00,
+		Quantity:             10_000_000,
+		QuantityScale:        8,
+		TakerSide:            "HOLD",
 	})
 	if err != ErrInvalidSettlement {
 		t.Fatalf("err = %v, want %v", err, ErrInvalidSettlement)
