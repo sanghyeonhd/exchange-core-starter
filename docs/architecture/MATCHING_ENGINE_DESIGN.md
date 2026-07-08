@@ -16,5 +16,7 @@ The initial engine supports spot `LIMIT` and `MARKET` orders with price-time pri
 
 ## Recovery Direction
 
-The current implementation is in-memory. Before production use, command WAL and periodic orderbook snapshots are required so `snapshot + WAL replay` produces the same book and trade sequence.
+Implemented: an append-only command WAL (`services/matching-engine/wal`, JSON-lines, fsync before acknowledge), orderbook snapshot/restore with a SHA-256 book hash, and a replay harness with divergence detection. `snapshot + WAL replay` is proven deterministic by `tests/replay`: the same command sequence rebuilds the same book hash and trade sequence, including snapshot-plus-tail and repeated recovery.
+
+Remaining before production: snapshot scheduling and retention, WAL segment rotation/archival, and recovery of settlement/account state (currently only the matching side replays).
 

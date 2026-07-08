@@ -83,53 +83,59 @@ func BuildTradeTransaction(req Request) (ledger.Transaction, Amounts, error) {
 		amounts.SellerFee = takerFee
 	}
 
+	entries := []ledger.Entry{
+		{
+			AccountID:     req.BuyerBaseAccountID,
+			Asset:         req.BaseAsset,
+			Debit:         req.Quantity,
+			Type:          ledger.EntryTrade,
+			ReferenceType: "TRADE",
+			ReferenceID:   req.TradeID,
+		},
+		{
+			AccountID:     req.SellerBaseAccountID,
+			Asset:         req.BaseAsset,
+			Credit:        req.Quantity,
+			Type:          ledger.EntryTrade,
+			ReferenceType: "TRADE",
+			ReferenceID:   req.TradeID,
+		},
+		{
+			AccountID:     req.SellerQuoteAccountID,
+			Asset:         req.QuoteAsset,
+			Debit:         notional - amounts.SellerFee,
+			Type:          ledger.EntryTrade,
+			ReferenceType: "TRADE",
+			ReferenceID:   req.TradeID,
+		},
+		{
+			AccountID:     req.BuyerQuoteAccountID,
+			Asset:         req.QuoteAsset,
+			Credit:        notional + amounts.BuyerFee,
+			Type:          ledger.EntryTrade,
+			ReferenceType: "TRADE",
+			ReferenceID:   req.TradeID,
+		},
+	}
+	// Fees can floor to zero on small notionals; a zero-amount entry is
+	// invalid in the ledger, so the fee leg is only added when it moves value.
+	if totalFee := amounts.BuyerFee + amounts.SellerFee; totalFee > 0 {
+		entries = append(entries, ledger.Entry{
+			AccountID:     req.FeeRevenueAccountID,
+			Asset:         req.QuoteAsset,
+			Debit:         totalFee,
+			Type:          ledger.EntryFee,
+			ReferenceType: "TRADE",
+			ReferenceID:   req.TradeID,
+		})
+	}
+
 	tx := ledger.Transaction{
 		Type:           ledger.EntryTrade,
 		ReferenceType:  "TRADE",
 		ReferenceID:    req.TradeID,
 		IdempotencyKey: "spot-trade:" + req.TradeID,
-		Entries: []ledger.Entry{
-			{
-				AccountID:     req.BuyerBaseAccountID,
-				Asset:         req.BaseAsset,
-				Debit:         req.Quantity,
-				Type:          ledger.EntryTrade,
-				ReferenceType: "TRADE",
-				ReferenceID:   req.TradeID,
-			},
-			{
-				AccountID:     req.SellerBaseAccountID,
-				Asset:         req.BaseAsset,
-				Credit:        req.Quantity,
-				Type:          ledger.EntryTrade,
-				ReferenceType: "TRADE",
-				ReferenceID:   req.TradeID,
-			},
-			{
-				AccountID:     req.SellerQuoteAccountID,
-				Asset:         req.QuoteAsset,
-				Debit:         notional - amounts.SellerFee,
-				Type:          ledger.EntryTrade,
-				ReferenceType: "TRADE",
-				ReferenceID:   req.TradeID,
-			},
-			{
-				AccountID:     req.FeeRevenueAccountID,
-				Asset:         req.QuoteAsset,
-				Debit:         amounts.BuyerFee + amounts.SellerFee,
-				Type:          ledger.EntryFee,
-				ReferenceType: "TRADE",
-				ReferenceID:   req.TradeID,
-			},
-			{
-				AccountID:     req.BuyerQuoteAccountID,
-				Asset:         req.QuoteAsset,
-				Credit:        notional + amounts.BuyerFee,
-				Type:          ledger.EntryTrade,
-				ReferenceType: "TRADE",
-				ReferenceID:   req.TradeID,
-			},
-		},
+		Entries:        entries,
 	}
 
 	if err := ledger.ValidateTransaction(tx); err != nil {

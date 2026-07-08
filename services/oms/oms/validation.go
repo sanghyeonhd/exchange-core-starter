@@ -99,11 +99,25 @@ func ValidateSpotOrder(market Market, req OrderRequest) (Reservation, error) {
 		return Reservation{Asset: market.BaseAsset, Amount: req.Quantity}, nil
 	}
 
-	fee, err := fee(notional, market.TakerFeePPM)
+	amount, err := BuyReservationAmount(market, req.Price, req.Quantity)
 	if err != nil {
 		return Reservation{}, err
 	}
-	return Reservation{Asset: market.QuoteAsset, Amount: notional + fee}, nil
+	return Reservation{Asset: market.QuoteAsset, Amount: amount}, nil
+}
+
+// BuyReservationAmount returns the quote amount a buy order must lock for the
+// given price and quantity: notional plus the taker-fee upper bound.
+func BuyReservationAmount(market Market, price, quantity int64) (int64, error) {
+	notionalValue, err := notional(price, quantity, market.QuantityScale)
+	if err != nil {
+		return 0, err
+	}
+	feeValue, err := fee(notionalValue, market.TakerFeePPM)
+	if err != nil {
+		return 0, err
+	}
+	return notionalValue + feeValue, nil
 }
 
 func ToEngineOrder(req OrderRequest) engine.Order {

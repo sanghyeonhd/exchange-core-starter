@@ -42,7 +42,7 @@ Exit criteria:
 
 ## Phase 2: Product Shell and Access Control
 
-Engineering status: domain RBAC and tamper-evident audit log implemented. Static user and admin product-shell screens exist under `apps/web` and `apps/admin`; backend connectivity is pending.
+Engineering status: domain RBAC and tamper-evident audit log implemented. The user product shell under `apps/web` now connects to the gateway REST API (markets, orderbook, trades, balances, order entry, withdrawal request) with a mock-data fallback when the gateway is offline. The admin shell under `apps/admin` remains static. Gateway authentication is a development placeholder (`X-USER-ID` header); API key/HMAC signing and session auth are pending.
 
 Goal: build the visible product shell and privileged access model before handling real assets.
 
@@ -61,6 +61,8 @@ Exit criteria:
 - Every admin action creates immutable audit records.
 
 ## Phase 3: Spot Trading Core
+
+Engineering status: the in-memory spot trading core is composed end to end (`services/oms/spotexchange`) and served over the gateway REST API — order placement with idempotent client order ids, balance reservation, price-time matching, per-trade double-entry settlement, excess-reservation release, cancel, open orders, trades, and balances. The Alice/Bob spot loop passes in-memory. Matching recovery is implemented: fsynced command WAL, orderbook snapshots with book hash, atomic checkpoints, and deterministic replay proven by `tests/replay` (full replay, snapshot + tail, repeated recovery). The public market data WebSocket is implemented: `/ws/public` streams trades and orderbook snapshots with per-channel sequences. Persistent account/ledger storage, orderbook deltas, ticker/kline, and private streams remain pending.
 
 Goal: production-grade spot trading core in test mode.
 
@@ -82,7 +84,7 @@ Exit criteria:
 
 ## Phase 4: Custody and Wallet Controls
 
-Engineering status: Mock wallet adapter, mainnet-disabled gate, withdrawal-disabled gate, address whitelist check, admin approval audit, and mock broadcast implemented. Ledger integration for deposits/withdrawals and testnet adapters remain pending.
+Engineering status: Mock wallet adapter, mainnet-disabled gate, withdrawal-disabled gate, address whitelist check, admin approval audit, and mock broadcast implemented. Ledger integration is complete for mock flows: confirmed deposits and broadcasted withdrawals settle as balanced, idempotent ledger transactions against an external omnibus account; withdrawal requests lock amount+fee and rejections release the lock (`services/settlement/funding`, `services/wallet-gateway/wallet.Coordinator`). Testnet adapters and reorg handling remain pending.
 
 Goal: support wallet flows without mainnet risk first, then testnet only.
 

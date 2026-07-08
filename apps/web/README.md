@@ -4,9 +4,23 @@ The user-facing web application is a separate app from admin.
 
 Current implementation:
 
-- Static screen in `index.html`.
-- No backend connectivity yet.
-- Can be opened directly in a browser for product-shell review.
+- Product shell in `index.html` + `app.js`.
+- Connects to the local gateway REST API (`http://localhost:8080/api/v1`) for
+  markets, orderbook, recent trades, balances, order entry, and withdrawal
+  requests. Uses the development auth placeholder (`X-USER-ID: 1`).
+- Falls back to static mock data when the gateway is offline, so the shell
+  stays reviewable on its own.
+
+Run locally:
+
+```bash
+# terminal 1: backend
+go run ./services/gateway/cmd/gateway
+
+# terminal 2: static server for the web shell
+python3 -m http.server 8081 --directory apps/web
+# open http://localhost:8081
+```
 
 Expected scope:
 

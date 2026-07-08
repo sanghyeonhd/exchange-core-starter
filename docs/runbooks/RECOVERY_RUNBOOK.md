@@ -2,14 +2,21 @@
 
 ## Current Status
 
-The first MVP includes in-memory matching and ledger invariant checks. Production recovery requires WAL, snapshots, event archive, and idempotent settlement consumers.
+Matching recovery primitives are implemented:
 
-## Matching Recovery Target
+- Command WAL (`services/matching-engine/wal`): every accepted place/cancel is fsynced as a JSON-lines envelope before it reaches the book. The gateway enables it with `MATCHING_WAL_PATH=<file>`; reopening the file resumes the sequence.
+- Orderbook snapshots (`engine.Snapshot` / `engine.RestoreOrderBook`) with a stable SHA-256 hash for comparison, and `spotexchange.Checkpoint()` pairing a snapshot with the WAL sequence atomically.
+- Replay harness (`wal.Replay`) that rejects any divergence between the log and the starting book state.
+- Deterministic replay tests in `tests/replay`: full replay, snapshot + tail replay, and repeated recovery all rebuild identical book hashes and trade sequences (`go test ./tests/replay/`).
+
+Still pending for production recovery: durable account/ledger storage, event archive, snapshot scheduling/retention, and recovery of in-flight reservations (accounts are currently rebuilt from seeds, not replayed).
+
+## Matching Recovery Procedure
 
 1. Stop accepting new commands for the affected symbol.
-2. Load the latest orderbook snapshot.
-3. Replay WAL commands after the snapshot sequence.
-4. Compare final book hash and last sequence with the expected event log.
+2. Load the latest orderbook snapshot (`engine.RestoreOrderBook`).
+3. Load the WAL (`wal.LoadFileLog`) and replay commands after the snapshot's WAL sequence (`wal.Replay`).
+4. Compare the final book hash (`OrderBookSnapshot.Hash`) and last sequence with the expected event log.
 5. Resume command intake only after consistency checks pass.
 
 ## Settlement Recovery Target

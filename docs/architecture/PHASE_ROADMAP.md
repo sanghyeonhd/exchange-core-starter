@@ -15,17 +15,18 @@ Status: in progress.
 
 ## Legacy Phase 1: Minimal Spot Loop
 
-Status: in progress.
+Status: core loop implemented in-memory and exposed over REST.
 
 Goal: seeded internal balances can trade BTC-USDT end to end.
 
-- Market config
-- Account projection: in-memory MVP implemented for tests
-- Ledger storage
-- OMS validation and reservation calculation: initial limit-order checks implemented
-- Matching engine: in-memory price-time priority implemented
+- Market config: static single-market config in the spot exchange composition
+- Account projection: in-memory store with reservation, release, and idempotent transaction apply
+- Ledger storage: in-memory entries behind balanced-transaction validation (persistence pending)
+- OMS validation and reservation calculation: limit-order checks and buy-reservation helper implemented
+- Matching engine: in-memory price-time priority implemented, with depth snapshot accessor
 - Spot settlement: trade-to-ledger builder implemented
-- Public/private WebSocket projections
+- Composition: `services/oms/spotexchange` wires order placement, reservation, matching, per-trade settlement, excess-reservation release, cancel, open orders, trades, and balances; served by the gateway REST API
+- Public WebSocket projections: implemented — `/ws/public` streams trades and orderbook snapshots with per-channel sequences (`services/market-data`, `libs/ws`); private streams pending
 
 Exit test:
 
@@ -47,11 +48,13 @@ Alice USDT 10000 + Bob BTC 1
 
 ## Legacy Phase 2: Wallet MVP
 
+Status: implemented against the mock adapter with full ledger integration.
+
 - Mock wallet adapter
 - Deposit address generation
-- Mock deposit confirmation
-- Withdrawal request and admin approval
-- Mock broadcast
+- Mock deposit confirmation: creates a balanced deposit ledger transaction (idempotent per deposit id)
+- Withdrawal request and admin approval: request locks amount+fee, approval and rejection are audited, rejection releases the lock
+- Mock broadcast: settles the withdrawal into ledger entries (idempotent per withdrawal id)
 - Audit log
 
 ## Legacy Phase 3: Perpetual Futures MVP
@@ -73,11 +76,13 @@ Alice USDT 10000 + Bob BTC 1
 
 ## Legacy Phase 5: Recovery
 
-- Matching WAL
-- Orderbook snapshots
-- Event replay
-- Settlement idempotent retry
-- Recovery runbook test
+Status: matching-side recovery implemented; durable account/ledger storage pending.
+
+- Matching WAL: JSON-lines command log with fsync-before-ack (`services/matching-engine/wal`), enabled in the gateway via `MATCHING_WAL_PATH`
+- Orderbook snapshots: `engine.Snapshot`/`engine.RestoreOrderBook` with SHA-256 book hash; `spotexchange.Checkpoint()` pairs a snapshot with the WAL sequence
+- Event replay: `wal.Replay` with divergence detection; deterministic replay tests in `tests/replay` (full replay, snapshot + tail, repeated recovery)
+- Settlement idempotent retry: idempotency keys enforced in account projection (duplicate apply is a no-op)
+- Recovery runbook test: replay gates covered by `go test ./tests/replay/`; operational drill pending
 
 ## Legacy Phase 6: Performance
 

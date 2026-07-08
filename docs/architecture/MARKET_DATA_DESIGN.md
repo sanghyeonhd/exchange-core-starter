@@ -1,5 +1,11 @@
 # Market Data Design
 
+## Implementation Status
+
+Implemented: `services/market-data/marketdata` hub with per-channel monotonic sequences, non-blocking publication (slow subscribers are dropped and must resubscribe), and spec envelopes for `trades` and `orderbook` (full snapshots). The spot exchange publishes under its matching lock so event order matches matching order. The gateway serves `/ws/public` over a dependency-free RFC 6455 implementation (`libs/ws`); clients receive a fresh orderbook snapshot on connect.
+
+Pending: orderbook deltas, `ticker`/`kline` channels, private streams, and persistence/archival.
+
 ## Responsibilities
 
 - Consume matching engine `TradeCreated` and `BookDelta` events.

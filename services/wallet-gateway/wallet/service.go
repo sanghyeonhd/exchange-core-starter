@@ -65,6 +65,35 @@ func (s *Service) ApproveWithdrawal(id int64, adminID string, requestID string, 
 	return withdrawal, nil
 }
 
+func (s *Service) RejectWithdrawal(id int64, adminID string, requestID string, reason string) (Withdrawal, error) {
+	withdrawal, ok := s.adapter.Withdrawal(id)
+	if !ok {
+		return Withdrawal{}, ErrWithdrawalNotFound
+	}
+	if withdrawal.Status != WithdrawalPendingReview {
+		return Withdrawal{}, ErrWithdrawalState
+	}
+	if _, err := s.auditLog.Append(audit.Event{
+		ID:           fmt.Sprintf("withdrawal-reject-%d", id),
+		ActorID:      adminID,
+		ActorType:    "ADMIN",
+		Action:       "WITHDRAWAL_REJECT",
+		ResourceType: "WITHDRAWAL",
+		ResourceID:   fmt.Sprintf("%d", id),
+		RequestID:    requestID,
+		Reason:       reason,
+	}); err != nil {
+		return Withdrawal{}, err
+	}
+	withdrawal.Status = WithdrawalRejected
+	s.adapter.StoreWithdrawal(withdrawal)
+	return withdrawal, nil
+}
+
+func (s *Service) Withdrawal(id int64) (Withdrawal, bool) {
+	return s.adapter.Withdrawal(id)
+}
+
 func (s *Service) MockBroadcast(id int64) (Withdrawal, error) {
 	withdrawal, ok := s.adapter.Withdrawal(id)
 	if !ok {

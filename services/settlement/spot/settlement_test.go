@@ -71,6 +71,42 @@ func TestBuildTradeTransactionTakerSell(t *testing.T) {
 	assertEntry(t, tx, 11, "USDT", 0, 500_050)
 }
 
+func TestBuildTradeTransactionZeroFeeOmitsFeeEntry(t *testing.T) {
+	// 0.001 BTC at 49990.00 = 49.99 notional; 100/200 ppm fees floor to 0.
+	tx, amounts, err := BuildTradeTransaction(Request{
+		TradeID:              "trd-zero-fee",
+		Symbol:               "BTC-USDT",
+		BaseAsset:            "BTC",
+		QuoteAsset:           "USDT",
+		BuyerBaseAccountID:   10,
+		BuyerQuoteAccountID:  11,
+		SellerBaseAccountID:  20,
+		SellerQuoteAccountID: 21,
+		FeeRevenueAccountID:  30,
+		Price:                49_990_00,
+		Quantity:             100_000,
+		QuantityScale:        8,
+		TakerSide:            Buy,
+		MakerFeeRatePPM:      100,
+		TakerFeeRatePPM:      200,
+	})
+	if err != nil {
+		t.Fatalf("BuildTradeTransaction: %v", err)
+	}
+	if amounts.BuyerFee != 0 || amounts.SellerFee != 0 {
+		t.Fatalf("fees = %+v, want zero", amounts)
+	}
+	assertValid(t, tx)
+	if len(tx.Entries) != 4 {
+		t.Fatalf("entries = %d, want 4 (no fee leg)", len(tx.Entries))
+	}
+	for _, entry := range tx.Entries {
+		if entry.AccountID == 30 {
+			t.Fatalf("unexpected fee revenue entry: %+v", entry)
+		}
+	}
+}
+
 func TestRejectInvalidSettlement(t *testing.T) {
 	_, _, err := BuildTradeTransaction(Request{
 		TradeID:              "trd-3",

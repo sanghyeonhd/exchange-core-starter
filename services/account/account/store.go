@@ -20,6 +20,10 @@ type Type string
 const (
 	TypeSpot       Type = "SPOT"
 	TypeFeeRevenue Type = "FEE_REVENUE"
+	// TypeExternal represents value outside the exchange (custody omnibus).
+	// It is the double-entry counterpart of deposits and withdrawals and is
+	// the only account type allowed to hold a negative available balance.
+	TypeExternal Type = "EXTERNAL"
 )
 
 type Balance struct {
@@ -151,7 +155,7 @@ func (s *Store) ApplyTransaction(tx ledger.Transaction) error {
 			} else {
 				remaining := entry.Credit - balance.Locked
 				balance.Locked = 0
-				if balance.Available < remaining {
+				if balance.Available < remaining && balance.Type != TypeExternal {
 					return ErrInsufficientBalance
 				}
 				balance.Available -= remaining
@@ -181,6 +185,19 @@ func (s *Store) Balance(accountID int64) (Balance, error) {
 		return Balance{}, ErrAccountNotFound
 	}
 	return *balance, nil
+}
+
+func (s *Store) BalancesByUser(userID int64) []Balance {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+
+	var balances []Balance
+	for _, balance := range s.accounts {
+		if balance.UserID == userID {
+			balances = append(balances, *balance)
+		}
+	}
+	return balances
 }
 
 func (s *Store) Entries() []ledger.Entry {
