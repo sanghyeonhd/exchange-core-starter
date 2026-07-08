@@ -42,7 +42,7 @@ Exit criteria:
 
 ## Phase 2: Product Shell and Access Control
 
-Engineering status: domain RBAC and tamper-evident audit log implemented. Web UI skeletons are documented but not yet built.
+Engineering status: domain RBAC and tamper-evident audit log implemented. Static user and admin product-shell screens exist under `apps/web` and `apps/admin`; backend connectivity is pending.
 
 Goal: build the visible product shell and privileged access model before handling real assets.
 

@@ -2,6 +2,12 @@
 
 The admin application is independently deployed from the user frontend.
 
+Current implementation:
+
+- Static operations screen in `index.html`.
+- No backend connectivity yet.
+- Can be opened directly in a browser for product-shell review.
+
 Expected scope:
 
 - User search and account status.
@@ -21,4 +27,3 @@ Production gates:
 - IP allowlist supported.
 - Privileged actions require immutable audit logs.
 - High-risk actions require dual approval where policy requires it.
-

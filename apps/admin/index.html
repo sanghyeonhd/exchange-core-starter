@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Exchange Admin Console</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <aside class="rail">
+      <strong>Admin</strong>
+      <a href="#kyc">KYC</a>
+      <a href="#aml">AML</a>
+      <a href="#withdrawals">Withdrawals</a>
+      <a href="#listing">Listing</a>
+      <a href="#evidence">Evidence</a>
+    </aside>
+
+    <main>
+      <header class="header">
+        <div>
+          <h1>Compliance Operations</h1>
+          <p>MFA required, RBAC enforced, every privileged action is audit chained.</p>
+        </div>
+        <div class="operator">KYC_ANALYST · MFA active</div>
+      </header>
+
+      <section class="metrics">
+        <div><span>KYC Review</span><strong>12</strong></div>
+        <div><span>AML Alerts</span><strong>4</strong></div>
+        <div><span>Withdrawals</span><strong>7</strong></div>
+        <div><span>Evidence Expiring</span><strong>2</strong></div>
+      </section>
+
+      <section class="grid">
+        <div class="panel" id="kyc">
+          <h2>KYC Queue</h2>
+          <table>
+            <thead><tr><th>User</th><th>Status</th><th>Risk</th><th></th></tr></thead>
+            <tbody>
+              <tr><td>u_1042</td><td>UNDER_REVIEW</td><td>LOW</td><td><button data-action="KYC_APPROVE">Approve</button></td></tr>
+              <tr><td>u_1088</td><td>PENDING</td><td>MEDIUM</td><td><button data-action="KYC_REVIEW">Review</button></td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="panel" id="aml">
+          <h2>AML Cases</h2>
+          <table>
+            <thead><tr><th>Case</th><th>Reason</th><th>Status</th><th></th></tr></thead>
+            <tbody>
+              <tr><td>aml_7001</td><td>High withdrawal velocity</td><td>OPEN</td><td><button data-action="AML_ESCALATE">Escalate</button></td></tr>
+              <tr><td>aml_7002</td><td>PEP vendor hit</td><td>NEEDS_REVIEW</td><td><button data-action="AML_REVIEW">Review</button></td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="panel" id="withdrawals">
+          <h2>Withdrawal Approvals</h2>
+          <table>
+            <thead><tr><th>ID</th><th>Asset</th><th>Amount</th><th>Gate</th><th></th></tr></thead>
+            <tbody>
+              <tr><td>wd_501</td><td>USDT/TRON</td><td>1,000.00</td><td>KYC L2 · AML Low · Whitelist</td><td><button data-action="WITHDRAWAL_APPROVE">Approve</button></td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="panel" id="listing">
+          <h2>Listing Controls</h2>
+          <ul class="status">
+            <li>BTC-USDT: LISTED</li>
+            <li>USDT/TRON: LISTED</li>
+            <li>Derivatives: BLOCKED_BY_READINESS_GATE</li>
+          </ul>
+        </div>
+
+        <div class="panel wide" id="evidence">
+          <h2>Evidence Register</h2>
+          <table>
+            <thead><tr><th>Control</th><th>Artifact</th><th>Owner</th><th>Freshness</th></tr></thead>
+            <tbody>
+              <tr><td>VULNERABILITY_SCAN</td><td>ci/run/1832</td><td>security</td><td class="ok">Fresh</td></tr>
+              <tr><td>RECOVERY_DRILL</td><td>runbook/drill/q3</td><td>sre</td><td class="warn">Expiring</td></tr>
+              <tr><td>ACCESS_REVIEW</td><td>access/review/monthly</td><td>security</td><td class="ok">Fresh</td></tr>
+            </tbody>
+          </table>
+          <p id="audit-status">No privileged action selected.</p>
+        </div>
+      </section>
+    </main>
+
+    <script src="./app.js"></script>
+  </body>
+</html>
+

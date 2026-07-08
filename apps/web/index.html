@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Exchange Web Console</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <div>
+        <strong>Exchange Web</strong>
+        <span class="env">regulated test mode</span>
+      </div>
+      <nav>
+        <a href="#markets">Markets</a>
+        <a href="#wallet">Wallet</a>
+        <a href="#kyc">KYC</a>
+        <a href="#security">Security</a>
+      </nav>
+    </header>
+
+    <main class="layout">
+      <section class="market-panel" id="markets">
+        <div class="panel-header">
+          <div>
+            <h1>BTC-USDT</h1>
+            <p>Spot market, trading enabled by compliance gate.</p>
+          </div>
+          <div class="price-block">
+            <span class="label">Last</span>
+            <strong id="last-price">50,000.00</strong>
+          </div>
+        </div>
+
+        <div class="trading-grid">
+          <section class="orderbook">
+            <h2>Orderbook</h2>
+            <table>
+              <thead>
+                <tr><th>Price</th><th>Qty</th><th>Total</th></tr>
+              </thead>
+              <tbody id="asks"></tbody>
+              <tbody id="bids"></tbody>
+            </table>
+          </section>
+
+          <section class="ticket">
+            <h2>Order Entry</h2>
+            <div class="segmented" role="tablist" aria-label="side">
+              <button class="active" id="buy-tab">Buy</button>
+              <button id="sell-tab">Sell</button>
+            </div>
+            <label>
+              Price
+              <input id="price" value="50000.00" inputmode="decimal" />
+            </label>
+            <label>
+              Quantity
+              <input id="quantity" value="0.10000000" inputmode="decimal" />
+            </label>
+            <label>
+              Compliance status
+              <input value="KYC L2, AML Low, Market Listed" readonly />
+            </label>
+            <button class="primary" id="submit-order">Submit Test Order</button>
+            <p class="notice" id="order-result">Orders are routed only in mock/test mode.</p>
+          </section>
+        </div>
+      </section>
+
+      <aside class="side-panel">
+        <section id="kyc">
+          <h2>Account Gate</h2>
+          <dl class="status-list">
+            <div><dt>KYC</dt><dd class="ok">Approved L2</dd></div>
+            <div><dt>AML</dt><dd class="ok">Low Risk</dd></div>
+            <div><dt>Withdrawals</dt><dd class="warn">Mock Only</dd></div>
+            <div><dt>Mainnet</dt><dd class="blocked">Disabled</dd></div>
+          </dl>
+        </section>
+
+        <section id="wallet">
+          <h2>Wallet</h2>
+          <div class="balance-row"><span>USDT</span><strong>10,000.000000</strong></div>
+          <div class="balance-row"><span>BTC</span><strong>0.00000000</strong></div>
+          <button id="withdraw" class="secondary">Request Mock Withdrawal</button>
+          <p class="notice" id="wallet-result">Address whitelist and compliance gates are required.</p>
+        </section>
+
+        <section id="security">
+          <h2>Security</h2>
+          <ul class="checks">
+            <li>API key withdrawal permission off by default</li>
+            <li>HMAC request signing required</li>
+            <li>Withdrawal address cooldown pending</li>
+          </ul>
+        </section>
+      </aside>
+    </main>
+
+    <script src="./app.js"></script>
+  </body>
+</html>
+

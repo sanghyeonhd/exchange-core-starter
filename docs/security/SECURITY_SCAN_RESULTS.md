@@ -14,6 +14,18 @@ Date: 2026-07-09
 
 `govulncheck` reported vulnerable symbols in dependency modules that are not called by this code. This is acceptable for the current skeleton but should be rechecked before release.
 
+## CI Evidence
+
+GitHub Actions workflow `.github/workflows/ci.yml` now runs:
+
+- `go test ./...`
+- `go vet ./...`
+- `govulncheck ./...`
+- `gitleaks/gitleaks-action`
+- static frontend entrypoint checks for `apps/web` and `apps/admin`
+
+These workflow runs are intended to become Phase 6 vulnerability-management evidence artifacts.
+
 ## Reference Sources
 
 Reference repositories are analysis inputs, not code inputs. After installing `gitleaks`, `scripts/audit-sources.sh` was rerun against `~/exchange-lab/sources`.
@@ -37,4 +49,3 @@ Policy impact:
 - CoinExchange/Gitee-family repositories remain structure-reference only.
 - Leak candidates in any reference repository are not copied, normalized, or used.
 - OPEX remains architecture-reference only until a focused review confirms the findings are harmless test fixtures or removes them from consideration.
-
