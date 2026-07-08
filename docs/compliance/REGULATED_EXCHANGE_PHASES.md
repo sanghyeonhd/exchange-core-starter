@@ -125,7 +125,7 @@ Exit criteria:
 
 ## Phase 6: ISMS/ISO Control Implementation
 
-Engineering status: evidence register package added for tracking control artifacts and freshness. CI artifact publishing, asset inventory generation, drills, and formal evidence binders remain pending.
+Engineering status: evidence register package and baseline asset inventory added for tracking control artifacts, owners, classifications, and freshness. Drill automation and formal evidence binders remain pending.
 
 Goal: engineering evidence supports ISMS/ISMS-P and ISO/IEC 27001 readiness.
 

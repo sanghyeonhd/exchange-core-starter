@@ -3,7 +3,7 @@
 | Control Area | Product Feature | Evidence Artifact |
 |---|---|---|
 | Governance | Compliance owner, security owner, risk owner | RACI, policy approval log |
-| Asset inventory | Services, databases, wallets, admin systems | Asset register |
+| Asset inventory | Services, databases, wallets, admin systems | `services/compliance/inventory` baseline register |
 | Access control | User roles, admin roles, service accounts | RBAC matrix, access review report |
 | Admin security | MFA, privileged action approval | Admin audit log, MFA config evidence |
 | KYC | Customer status and review workflow | KYC case record, vendor response archive, `services/kyc/kyc` state tests |
