@@ -7,6 +7,8 @@
 - `WALLET_ADAPTER=mock`
 - No private key, mnemonic, exchange API key, or custody credential may be committed.
 
+The current `services/wallet-gateway/wallet` implementation enforces mainnet-disabled behavior for deposit address creation and withdrawal-disabled behavior for withdrawal requests unless explicitly enabled in test configuration.
+
 ## Adapter Types
 
 | Adapter | Use |
@@ -41,4 +43,3 @@
 - Signer cannot approve withdrawals.
 - Admin approval cannot sign or broadcast.
 - Cold wallet movement remains manual until a separate runbook and approval model exist.
-

@@ -82,6 +82,8 @@ Exit criteria:
 
 ## Phase 4: Custody and Wallet Controls
 
+Engineering status: Mock wallet adapter, mainnet-disabled gate, withdrawal-disabled gate, address whitelist check, admin approval audit, and mock broadcast implemented. Ledger integration for deposits/withdrawals and testnet adapters remain pending.
+
 Goal: support wallet flows without mainnet risk first, then testnet only.
 
 Deliverables:
