@@ -42,6 +42,8 @@ Exit criteria:
 
 ## Phase 2: Product Shell and Access Control
 
+Engineering status: domain RBAC and tamper-evident audit log implemented. Web UI skeletons are documented but not yet built.
+
 Goal: build the visible product shell and privileged access model before handling real assets.
 
 Deliverables:
@@ -99,6 +101,8 @@ Exit criteria:
 - Reorg and idempotency tests exist before any mainnet work.
 
 ## Phase 5: KYC, AML, Travel Rule, and Whitelists
+
+Engineering status: KYC, AML, listing whitelist, and aggregate compliance decision packages implemented for policy gating. Vendor integrations, Travel Rule messaging, and case-management persistence are still pending.
 
 Goal: make customer and transaction controls first-class services.
 
@@ -211,4 +215,3 @@ Deliverables:
 Exit criteria:
 
 - Written approval exists before enabling any derivative product.
-
