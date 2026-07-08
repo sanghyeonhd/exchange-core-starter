@@ -15,7 +15,7 @@
 | Compliance gates | Trade/deposit/withdraw allow or deny decision | `services/compliance/compliance` decision tests |
 | Ledger integrity | Double-entry per asset | Reconciliation report |
 | Matching integrity | Deterministic replay | Replay report and book hash |
-| Market surveillance | Abnormal trading alerts | Alert record and disposition |
+| Market surveillance | Abnormal trading alerts | Alert record and disposition, `services/risk/surveillance` rule tests |
 | Vulnerability management | Code and dependency scanning on Go 1.25.12+ | gitleaks/govulncheck/trivy CI artifact |
 | Incident response | Detection, escalation, containment | Incident drill report |
 | Business continuity | Backup and recovery | Restore drill report |

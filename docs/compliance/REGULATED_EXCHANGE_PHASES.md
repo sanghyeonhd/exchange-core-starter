@@ -189,7 +189,7 @@ Exit criteria:
 
 ## Phase 9: Controlled Production Launch
 
-Engineering status: production launch readiness gate added. Launch remains blocked unless legal, compliance, security, ISMS, VASP filing, operational drill, and surveillance conditions are true.
+Engineering status: production launch readiness gate and initial market-surveillance rule package added. Launch remains blocked unless legal, compliance, security, ISMS, VASP filing, operational drill, and surveillance conditions are true.
 
 Goal: launch only the approved product scope.
 
