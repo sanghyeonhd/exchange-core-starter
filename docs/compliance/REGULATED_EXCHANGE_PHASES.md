@@ -150,6 +150,8 @@ Exit criteria:
 
 ## Phase 7: VASP Filing and Bank Readiness Package
 
+Engineering status: launch readiness gate added. Actual filing, bank readiness, and legal sign-off remain external dependencies.
+
 Goal: prepare the non-code package needed for regulated operation.
 
 Deliverables:
@@ -187,6 +189,8 @@ Exit criteria:
 
 ## Phase 9: Controlled Production Launch
 
+Engineering status: production launch readiness gate added. Launch remains blocked unless legal, compliance, security, ISMS, VASP filing, operational drill, and surveillance conditions are true.
+
 Goal: launch only the approved product scope.
 
 Deliverables:
@@ -205,6 +209,8 @@ Exit criteria:
 - Futures/perpetuals remain disabled unless separately approved.
 
 ## Phase 10: Derivatives Review and Expansion
+
+Engineering status: derivatives readiness gate added. Derivatives remain blocked unless separate derivatives legal approval, risk approval, customer suitability, and surveillance controls are satisfied.
 
 Goal: evaluate perpetual futures only after spot compliance maturity.
 

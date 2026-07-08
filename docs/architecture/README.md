@@ -24,6 +24,7 @@ Use these as the primary roadmap and control references:
 1. `../compliance/REGULATED_EXCHANGE_PHASES.md` - regulated exchange phase plan.
 2. `../compliance/KR_REGULATED_EXCHANGE_REQUIREMENTS.md` - Korea-focused regulatory baseline.
 3. `../compliance/CONTROL_MATRIX.md` - ISMS/ISO/compliance evidence mapping.
+4. `../compliance/LAUNCH_READINESS_CHECKLIST.md` - production launch, fiat, custody, and derivatives gates.
 
 ## Application Boundaries
 
