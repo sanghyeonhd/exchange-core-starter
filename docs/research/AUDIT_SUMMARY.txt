@@ -1,0 +1,315 @@
+## billy-coinexchange
+path: /Users/deniallee/exchange-lab/sources/billy-coinexchange
+branch: master
+latest_commit: 001c9bd372e42aed678189c085a4cebe944b0767
+license_file: /Users/deniallee/exchange-lab/sources/billy-coinexchange/LICENSE
+readme_file: /Users/deniallee/exchange-lab/sources/billy-coinexchange/04_Web_Admin/README.md
+dependency_files:
+  - /Users/deniallee/exchange-lab/sources/billy-coinexchange/00_framework/exchange/pom.xml
+  - /Users/deniallee/exchange-lab/sources/billy-coinexchange/00_framework/core/pom.xml
+  - /Users/deniallee/exchange-lab/sources/billy-coinexchange/00_framework/ucenter-api/pom.xml
+  - /Users/deniallee/exchange-lab/sources/billy-coinexchange/00_framework/exchange-api/pom.xml
+  - /Users/deniallee/exchange-lab/sources/billy-coinexchange/00_framework/chat/pom.xml
+  - /Users/deniallee/exchange-lab/sources/billy-coinexchange/00_framework/otc-api/pom.xml
+  - /Users/deniallee/exchange-lab/sources/billy-coinexchange/00_framework/admin/pom.xml
+  - /Users/deniallee/exchange-lab/sources/billy-coinexchange/00_framework/pom.xml
+  - /Users/deniallee/exchange-lab/sources/billy-coinexchange/00_framework/exchange-core/pom.xml
+  - /Users/deniallee/exchange-lab/sources/billy-coinexchange/00_framework/cloud/pom.xml
+  - /Users/deniallee/exchange-lab/sources/billy-coinexchange/00_framework/wallet/pom.xml
+  - /Users/deniallee/exchange-lab/sources/billy-coinexchange/00_framework/market/pom.xml
+  - /Users/deniallee/exchange-lab/sources/billy-coinexchange/00_framework/otc-core/pom.xml
+  - /Users/deniallee/exchange-lab/sources/billy-coinexchange/00_framework/bitrade-job/pom.xml
+  - /Users/deniallee/exchange-lab/sources/billy-coinexchange/04_Web_Admin/package.json
+  - /Users/deniallee/exchange-lab/sources/billy-coinexchange/01_wallet_rpc/btm/pom.xml
+  - /Users/deniallee/exchange-lab/sources/billy-coinexchange/01_wallet_rpc/eth-support/pom.xml
+  - /Users/deniallee/exchange-lab/sources/billy-coinexchange/01_wallet_rpc/ltc/pom.xml
+  - /Users/deniallee/exchange-lab/sources/billy-coinexchange/01_wallet_rpc/bch/pom.xml
+  - /Users/deniallee/exchange-lab/sources/billy-coinexchange/01_wallet_rpc/bsv/pom.xml
+  - /Users/deniallee/exchange-lab/sources/billy-coinexchange/01_wallet_rpc/pom.xml
+  - /Users/deniallee/exchange-lab/sources/billy-coinexchange/01_wallet_rpc/act/pom.xml
+  - /Users/deniallee/exchange-lab/sources/billy-coinexchange/01_wallet_rpc/ect/pom.xml
+  - /Users/deniallee/exchange-lab/sources/billy-coinexchange/01_wallet_rpc/bitcoin/pom.xml
+  - /Users/deniallee/exchange-lab/sources/billy-coinexchange/01_wallet_rpc/erc-eusdt/pom.xml
+  - /Users/deniallee/exchange-lab/sources/billy-coinexchange/01_wallet_rpc/usdt/pom.xml
+  - /Users/deniallee/exchange-lab/sources/billy-coinexchange/01_wallet_rpc/erc-token/pom.xml
+  - /Users/deniallee/exchange-lab/sources/billy-coinexchange/01_wallet_rpc/eth/pom.xml
+  - /Users/deniallee/exchange-lab/sources/billy-coinexchange/01_wallet_rpc/rpc-common/pom.xml
+  - /Users/deniallee/exchange-lab/sources/billy-coinexchange/01_wallet_rpc/xmr/pom.xml
+  - /Users/deniallee/exchange-lab/sources/billy-coinexchange/01_wallet_rpc/eos/pom.xml
+  - /Users/deniallee/exchange-lab/sources/billy-coinexchange/05_Web_Front/package.json
+language_summary:
+   878 java
+   205 png
+   149 vue
+    88 properties
+    88 prefs
+    74 xml
+    71 js
+    35 json
+    31 jar
+    31 gitignore
+    29 project
+    28 classpath
+secret_scan: skipped, gitleaks not installed
+
+## coincoin-crypto-exchange
+path: /Users/deniallee/exchange-lab/sources/coincoin-crypto-exchange
+branch: master
+latest_commit: 0a6d6dbda24ea143bf76ca9f3948ce88f80639bd
+license_file: /Users/deniallee/exchange-lab/sources/coincoin-crypto-exchange/LICENSE
+readme_file: /Users/deniallee/exchange-lab/sources/coincoin-crypto-exchange/README.en.md
+dependency_files:
+  - /Users/deniallee/exchange-lab/sources/coincoin-crypto-exchange/00_framework/exchange/pom.xml
+  - /Users/deniallee/exchange-lab/sources/coincoin-crypto-exchange/00_framework/core/pom.xml
+  - /Users/deniallee/exchange-lab/sources/coincoin-crypto-exchange/00_framework/ucenter-api/pom.xml
+  - /Users/deniallee/exchange-lab/sources/coincoin-crypto-exchange/00_framework/exchange-api/pom.xml
+  - /Users/deniallee/exchange-lab/sources/coincoin-crypto-exchange/00_framework/chat/pom.xml
+  - /Users/deniallee/exchange-lab/sources/coincoin-crypto-exchange/00_framework/otc-api/pom.xml
+  - /Users/deniallee/exchange-lab/sources/coincoin-crypto-exchange/00_framework/admin/pom.xml
+  - /Users/deniallee/exchange-lab/sources/coincoin-crypto-exchange/00_framework/pom.xml
+  - /Users/deniallee/exchange-lab/sources/coincoin-crypto-exchange/00_framework/exchange-core/pom.xml
+  - /Users/deniallee/exchange-lab/sources/coincoin-crypto-exchange/00_framework/cloud/pom.xml
+  - /Users/deniallee/exchange-lab/sources/coincoin-crypto-exchange/00_framework/wallet/pom.xml
+  - /Users/deniallee/exchange-lab/sources/coincoin-crypto-exchange/00_framework/market/pom.xml
+  - /Users/deniallee/exchange-lab/sources/coincoin-crypto-exchange/00_framework/otc-core/pom.xml
+  - /Users/deniallee/exchange-lab/sources/coincoin-crypto-exchange/00_framework/bitrade-job/pom.xml
+  - /Users/deniallee/exchange-lab/sources/coincoin-crypto-exchange/04_Web_Admin/package.json
+  - /Users/deniallee/exchange-lab/sources/coincoin-crypto-exchange/01_wallet_rpc/btm/pom.xml
+  - /Users/deniallee/exchange-lab/sources/coincoin-crypto-exchange/01_wallet_rpc/eth-support/pom.xml
+  - /Users/deniallee/exchange-lab/sources/coincoin-crypto-exchange/01_wallet_rpc/ltc/pom.xml
+  - /Users/deniallee/exchange-lab/sources/coincoin-crypto-exchange/01_wallet_rpc/bch/pom.xml
+  - /Users/deniallee/exchange-lab/sources/coincoin-crypto-exchange/01_wallet_rpc/bsv/pom.xml
+  - /Users/deniallee/exchange-lab/sources/coincoin-crypto-exchange/01_wallet_rpc/pom.xml
+  - /Users/deniallee/exchange-lab/sources/coincoin-crypto-exchange/01_wallet_rpc/ect/pom.xml
+  - /Users/deniallee/exchange-lab/sources/coincoin-crypto-exchange/01_wallet_rpc/bitcoin/pom.xml
+  - /Users/deniallee/exchange-lab/sources/coincoin-crypto-exchange/01_wallet_rpc/erc-eusdt/pom.xml
+  - /Users/deniallee/exchange-lab/sources/coincoin-crypto-exchange/01_wallet_rpc/usdt/pom.xml
+  - /Users/deniallee/exchange-lab/sources/coincoin-crypto-exchange/01_wallet_rpc/erc-token/pom.xml
+  - /Users/deniallee/exchange-lab/sources/coincoin-crypto-exchange/01_wallet_rpc/eth/pom.xml
+  - /Users/deniallee/exchange-lab/sources/coincoin-crypto-exchange/01_wallet_rpc/rpc-common/pom.xml
+  - /Users/deniallee/exchange-lab/sources/coincoin-crypto-exchange/01_wallet_rpc/xmr/pom.xml
+  - /Users/deniallee/exchange-lab/sources/coincoin-crypto-exchange/01_wallet_rpc/eos/pom.xml
+  - /Users/deniallee/exchange-lab/sources/coincoin-crypto-exchange/05_Web_Front/package.json
+  - /Users/deniallee/exchange-lab/sources/coincoin-crypto-exchange/02_App_Android/kchartlib/build.gradle
+  - /Users/deniallee/exchange-lab/sources/coincoin-crypto-exchange/02_App_Android/app/build.gradle
+  - /Users/deniallee/exchange-lab/sources/coincoin-crypto-exchange/02_App_Android/MPChartLib/pom.xml
+  - /Users/deniallee/exchange-lab/sources/coincoin-crypto-exchange/02_App_Android/MPChartLib/build.gradle
+  - /Users/deniallee/exchange-lab/sources/coincoin-crypto-exchange/02_App_Android/lib-zxing/build.gradle
+  - /Users/deniallee/exchange-lab/sources/coincoin-crypto-exchange/02_App_Android/build.gradle
+language_summary:
+  1506 java
+   935 png
+   861 h
+   471 m
+   385 xml
+   218 json
+   149 vue
+   133 xib
+    88 properties
+    72 js
+    39 xcscheme
+    34 md
+secret_scan: skipped, gitleaks not installed
+
+## coinglobalvip
+path: /Users/deniallee/exchange-lab/sources/coinglobalvip
+branch: master
+latest_commit: bf4042f62cc5bfe3753bc84f60c84da1b8825a72
+license_file: /Users/deniallee/exchange-lab/sources/coinglobalvip/LICENSE
+readme_file: /Users/deniallee/exchange-lab/sources/coinglobalvip/00_framework/README.md
+dependency_files:
+  - /Users/deniallee/exchange-lab/sources/coinglobalvip/00_framework/exchange/pom.xml
+  - /Users/deniallee/exchange-lab/sources/coinglobalvip/00_framework/core/pom.xml
+  - /Users/deniallee/exchange-lab/sources/coinglobalvip/00_framework/ucenter-api/pom.xml
+  - /Users/deniallee/exchange-lab/sources/coinglobalvip/00_framework/exchange-api/pom.xml
+  - /Users/deniallee/exchange-lab/sources/coinglobalvip/00_framework/chat/pom.xml
+  - /Users/deniallee/exchange-lab/sources/coinglobalvip/00_framework/otc-api/pom.xml
+  - /Users/deniallee/exchange-lab/sources/coinglobalvip/00_framework/admin/pom.xml
+  - /Users/deniallee/exchange-lab/sources/coinglobalvip/00_framework/pom.xml
+  - /Users/deniallee/exchange-lab/sources/coinglobalvip/00_framework/exchange-core/pom.xml
+  - /Users/deniallee/exchange-lab/sources/coinglobalvip/00_framework/cloud/pom.xml
+  - /Users/deniallee/exchange-lab/sources/coinglobalvip/00_framework/wallet/pom.xml
+  - /Users/deniallee/exchange-lab/sources/coinglobalvip/00_framework/market/pom.xml
+  - /Users/deniallee/exchange-lab/sources/coinglobalvip/00_framework/otc-core/pom.xml
+  - /Users/deniallee/exchange-lab/sources/coinglobalvip/00_framework/bitrade-job/pom.xml
+  - /Users/deniallee/exchange-lab/sources/coinglobalvip/04_Web_Admin/package.json
+  - /Users/deniallee/exchange-lab/sources/coinglobalvip/05_Web_Front/package.json
+language_summary:
+   205 png
+   144 vue
+    71 js
+    41 prefs
+    41 java
+    35 json
+    20 xml
+    20 md
+    18 properties
+    15 less
+    15 gitignore
+    14 sample
+secret_scan: skipped, gitleaks not installed
+
+## exchange-core
+path: /Users/deniallee/exchange-lab/sources/exchange-core
+branch: master
+latest_commit: 2f8548749839e9095c8dc597e4b61521d259fa5d
+license_file: /Users/deniallee/exchange-lab/sources/exchange-core/LICENSE.txt
+readme_file: /Users/deniallee/exchange-lab/sources/exchange-core/dumps/readme.txt
+dependency_files:
+  - /Users/deniallee/exchange-lab/sources/exchange-core/pom.xml
+language_summary:
+   149 java
+    14 sample
+     2 xml
+     2 txt
+     2 feature
+     1 yml
+     1 rev
+     1 png
+     1 pack
+     1 md
+     1 idx
+     1 gitignore
+secret_scan: skipped, gitleaks not installed
+
+## frizo-exchange
+path: /Users/deniallee/exchange-lab/sources/frizo-exchange
+branch: main
+latest_commit: e0cf5531bc41ca76a6daf220edd6e60c27976733
+license_file: 
+readme_file: /Users/deniallee/exchange-lab/sources/frizo-exchange/README.md
+dependency_files:
+  - /Users/deniallee/exchange-lab/sources/frizo-exchange/exchange-engine/go.mod
+  - /Users/deniallee/exchange-lab/sources/frizo-exchange/go.mod
+language_summary:
+    14 sample
+    11 md
+     8 go
+     2 sum
+     2 mod
+     1 rev
+     1 pack
+     1 idx
+     1 gitignore
+     1 git/refs/remotes/origin/HEAD
+     1 git/refs/heads/main
+     1 git/packed-refs
+secret_scan: skipped, gitleaks not installed
+
+## futures-engine
+path: /Users/deniallee/exchange-lab/sources/futures-engine
+branch: main
+latest_commit: 2654bceb4ae2b8258d9b6eac74efc0deafbe0488
+license_file: /Users/deniallee/exchange-lab/sources/futures-engine/LICENSE
+readme_file: /Users/deniallee/exchange-lab/sources/futures-engine/README.md
+dependency_files:
+  - /Users/deniallee/exchange-lab/sources/futures-engine/go.mod
+language_summary:
+    23 go
+    14 sample
+     8 md
+     2 png
+     1 sum
+     1 staging
+     1 rev
+     1 pack
+     1 mod
+     1 local
+     1 json
+     1 idx
+secret_scan: skipped, gitleaks not installed
+
+## omx-engine
+path: /Users/deniallee/exchange-lab/sources/omx-engine
+branch: master
+latest_commit: bfc0139092957d89191083f7dccab74850bdbfc2
+license_file: 
+readme_file: /Users/deniallee/exchange-lab/sources/omx-engine/README.md
+dependency_files:
+language_summary:
+    95 h
+    62 cpp
+    57 c
+    14 sample
+     8 py
+     4 sh
+     4 md
+     3 sol
+     3 pyc
+     3 json
+     2 txt
+     1 rev
+secret_scan: skipped, gitleaks not installed
+
+## opencex
+path: /Users/deniallee/exchange-lab/sources/opencex
+branch: master
+latest_commit: 12d721419cc4cf1378f43be3514cfe982a3d3515
+license_file: /Users/deniallee/exchange-lab/sources/opencex/LICENSE.md
+readme_file: /Users/deniallee/exchange-lab/sources/opencex/README.md
+dependency_files:
+language_summary:
+    14 sample
+     3 conf
+     2 template
+     2 md
+     1 sh
+     1 rev
+     1 png
+     1 pack
+     1 idx
+     1 gitignore
+     1 git/refs/remotes/origin/HEAD
+     1 git/refs/heads/master
+secret_scan: skipped, gitleaks not installed
+
+## opex-core
+path: /Users/deniallee/exchange-lab/sources/opex-core
+branch: main
+latest_commit: acccd9b462067998ee5c257a5cdcc056233c08cc
+license_file: /Users/deniallee/exchange-lab/sources/opex-core/LICENSE-THIRD-PARTY
+readme_file: /Users/deniallee/exchange-lab/sources/opex-core/README.md
+dependency_files:
+  - /Users/deniallee/exchange-lab/sources/opex-core/matching-engine/pom.xml
+  - /Users/deniallee/exchange-lab/sources/opex-core/matching-engine/matching-engine-core/pom.xml
+  - /Users/deniallee/exchange-lab/sources/opex-core/matching-engine/matching-engine-app/pom.xml
+  - /Users/deniallee/exchange-lab/sources/opex-core/pom.xml
+  - /Users/deniallee/exchange-lab/sources/opex-core/common/pom.xml
+  - /Users/deniallee/exchange-lab/sources/opex-core/accountant/accountant-app/pom.xml
+  - /Users/deniallee/exchange-lab/sources/opex-core/accountant/accountant-core/pom.xml
+  - /Users/deniallee/exchange-lab/sources/opex-core/accountant/pom.xml
+  - /Users/deniallee/exchange-lab/sources/opex-core/wallet/pom.xml
+  - /Users/deniallee/exchange-lab/sources/opex-core/wallet/wallet-app/pom.xml
+  - /Users/deniallee/exchange-lab/sources/opex-core/wallet/wallet-core/pom.xml
+  - /Users/deniallee/exchange-lab/sources/opex-core/api/pom.xml
+  - /Users/deniallee/exchange-lab/sources/opex-core/api/api-app/pom.xml
+  - /Users/deniallee/exchange-lab/sources/opex-core/api/api-core/pom.xml
+  - /Users/deniallee/exchange-lab/sources/opex-core/market/pom.xml
+  - /Users/deniallee/exchange-lab/sources/opex-core/market/market-app/pom.xml
+  - /Users/deniallee/exchange-lab/sources/opex-core/market/market-core/pom.xml
+  - /Users/deniallee/exchange-lab/sources/opex-core/user-management/keycloak-gateway/pom.xml
+  - /Users/deniallee/exchange-lab/sources/opex-core/user-management/pom.xml
+  - /Users/deniallee/exchange-lab/sources/opex-core/user-management/user-management-core/pom.xml
+  - /Users/deniallee/exchange-lab/sources/opex-core/eventlog/eventlog-core/pom.xml
+  - /Users/deniallee/exchange-lab/sources/opex-core/eventlog/pom.xml
+  - /Users/deniallee/exchange-lab/sources/opex-core/eventlog/eventlog-app/pom.xml
+  - /Users/deniallee/exchange-lab/sources/opex-core/bc-gateway/bc-gateway-app/pom.xml
+  - /Users/deniallee/exchange-lab/sources/opex-core/bc-gateway/pom.xml
+  - /Users/deniallee/exchange-lab/sources/opex-core/bc-gateway/bc-gateway-core/pom.xml
+  - /Users/deniallee/exchange-lab/sources/opex-core/matching-gateway/matching-gateway-app/pom.xml
+  - /Users/deniallee/exchange-lab/sources/opex-core/matching-gateway/pom.xml
+language_summary:
+   834 kt
+    54 xml
+    31 yml
+    14 sample
+     6 sql
+     4 json
+     4 java
+     4 html
+     4 gitignore
+     3 md
+     2 sh
+     2 properties
+secret_scan: skipped, gitleaks not installed
+
