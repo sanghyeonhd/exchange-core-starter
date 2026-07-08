@@ -55,7 +55,10 @@ MATCHING_WAL_PATH=./matching.wal go run ./services/gateway/cmd/gateway
 go test ./tests/replay/                 # deterministic recovery gates (snapshot + WAL replay)
 
 # user web shell against the local gateway
-python3 -m http.server 8081 --directory apps/web   # open http://localhost:8081
+python3 -m http.server 3000 --directory apps/web   # open http://localhost:3000
+
+# admin web shell against the local gateway
+python3 -m http.server 3001 --directory apps/admin # open http://localhost:3001
 ```
 
 Quick API tour (development auth placeholder):
