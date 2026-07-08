@@ -1,6 +1,10 @@
 # Phase Roadmap
 
-## Phase 0: Research and Clean-Room Design
+The project roadmap has moved from MVP delivery to regulated exchange readiness. Use `docs/compliance/REGULATED_EXCHANGE_PHASES.md` as the primary roadmap.
+
+This file is kept as an engineering implementation companion for the trading core.
+
+## Legacy Phase 0: Research and Clean-Room Design
 
 Status: in progress.
 
@@ -9,7 +13,7 @@ Status: in progress.
 - Produce architecture, API, database, event, and runbook documents.
 - Avoid direct code reuse before license review.
 
-## Phase 1: Minimal Spot Loop
+## Legacy Phase 1: Minimal Spot Loop
 
 Status: in progress.
 
@@ -41,7 +45,7 @@ Alice USDT 10000 + Bob BTC 1
   -> Duplicate settlement apply is idempotent
 ```
 
-## Phase 2: Wallet MVP
+## Legacy Phase 2: Wallet MVP
 
 - Mock wallet adapter
 - Deposit address generation
@@ -50,7 +54,7 @@ Alice USDT 10000 + Bob BTC 1
 - Mock broadcast
 - Audit log
 
-## Phase 3: Perpetual Futures MVP
+## Legacy Phase 3: Perpetual Futures MVP
 
 - PERP markets
 - Isolated one-way positions
@@ -59,7 +63,7 @@ Alice USDT 10000 + Bob BTC 1
 - Funding payment mock
 - Liquidation condition detection
 
-## Phase 4: Risk and Liquidation
+## Legacy Phase 4: Risk and Liquidation
 
 - Price bands
 - Circuit breaker
@@ -67,7 +71,7 @@ Alice USDT 10000 + Bob BTC 1
 - Insurance fund ledger account
 - Duplicate liquidation prevention
 
-## Phase 5: Recovery
+## Legacy Phase 5: Recovery
 
 - Matching WAL
 - Orderbook snapshots
@@ -75,7 +79,7 @@ Alice USDT 10000 + Bob BTC 1
 - Settlement idempotent retry
 - Recovery runbook test
 
-## Phase 6: Performance
+## Legacy Phase 6: Performance
 
 - Matching benchmark
 - Load test

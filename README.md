@@ -6,8 +6,8 @@ This repository is a clean-room implementation. Public exchange repositories are
 
 ## Current Scope
 
-- Phase 0: source clone/audit scripts and architecture decisions.
-- Phase 1: deterministic spot orderbook matching, OMS validation, in-memory account projection, and spot settlement integration tests.
+- Regulated exchange roadmap: user web, independent admin web, backend, matching engine, wallet gateway, KYC, AML, Travel Rule, whitelists, ISMS/ISO evidence, and Korean VASP readiness.
+- Trading core: deterministic spot orderbook matching, OMS validation, in-memory account projection, and spot settlement integration tests.
 - Overall design contracts: REST/WebSocket specs, proto interfaces, database DDL, event model, wallet/risk/futures design.
 
 ## Safety Defaults
@@ -28,6 +28,9 @@ make audit-sources
 ## Design Entry Points
 
 - [Architecture index](docs/architecture/README.md)
+- [Regulated exchange phases](docs/compliance/REGULATED_EXCHANGE_PHASES.md)
+- [Korea regulated exchange requirements](docs/compliance/KR_REGULATED_EXCHANGE_REQUIREMENTS.md)
+- [Control matrix](docs/compliance/CONTROL_MATRIX.md)
 - [REST API spec](docs/api/REST_API_SPEC.md)
 - [WebSocket spec](docs/api/WEBSOCKET_SPEC.md)
 - [PostgreSQL schema](docs/database/POSTGRES_SCHEMA.sql)
