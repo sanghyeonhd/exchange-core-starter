@@ -49,8 +49,10 @@ func ValidateTransaction(tx Transaction) error {
 		return ErrNoEntries
 	}
 
-	var debitTotal int64
-	var creditTotal int64
+	totalsByAsset := make(map[string]struct {
+		debit  int64
+		credit int64
+	})
 	for _, entry := range tx.Entries {
 		if entry.AccountID <= 0 || entry.Asset == "" {
 			return ErrInvalidEntry
@@ -64,12 +66,16 @@ func ValidateTransaction(tx Transaction) error {
 		if entry.Debit > 0 && entry.Credit > 0 {
 			return ErrInvalidEntry
 		}
-		debitTotal += entry.Debit
-		creditTotal += entry.Credit
+		total := totalsByAsset[entry.Asset]
+		total.debit += entry.Debit
+		total.credit += entry.Credit
+		totalsByAsset[entry.Asset] = total
 	}
 
-	if debitTotal != creditTotal {
-		return ErrImbalancedTransaction
+	for _, total := range totalsByAsset {
+		if total.debit != total.credit {
+			return ErrImbalancedTransaction
+		}
 	}
 	return nil
 }

@@ -18,6 +18,24 @@ func TestValidateBalancedTransaction(t *testing.T) {
 	}
 }
 
+func TestValidateBalancedMultiAssetTransaction(t *testing.T) {
+	tx := Transaction{
+		ID:             1,
+		Type:           EntryTrade,
+		IdempotencyKey: "trade-1",
+		Entries: []Entry{
+			{AccountID: 10, Asset: "BTC", Debit: 1, Type: EntryTrade},
+			{AccountID: 20, Asset: "BTC", Credit: 1, Type: EntryTrade},
+			{AccountID: 20, Asset: "USDT", Debit: 50_000_00, Type: EntryTrade},
+			{AccountID: 10, Asset: "USDT", Credit: 50_000_00, Type: EntryTrade},
+		},
+	}
+
+	if err := ValidateTransaction(tx); err != nil {
+		t.Fatalf("ValidateTransaction: %v", err)
+	}
+}
+
 func TestRejectImbalancedTransaction(t *testing.T) {
 	tx := Transaction{
 		ID:             1,
