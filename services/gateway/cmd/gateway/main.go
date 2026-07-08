@@ -37,6 +37,9 @@ func main() {
 	marketData := marketdata.NewHub()
 	exchange.SetMarketData(marketData)
 
+	privateData := marketdata.NewPrivateHub()
+	exchange.SetPrivateData(privateData)
+
 	// Ticker and kline aggregators feed from matching trades and publish
 	// through the same market data hub.
 	market := exchange.Market()
@@ -87,9 +90,10 @@ func main() {
 
 	// Public gateway on :8080.
 	server := httpapi.NewServer(httpapi.Deps{
-		Exchange:   exchange,
-		Wallet:     coordinator,
-		MarketData: marketData,
+		Exchange:    exchange,
+		Wallet:      coordinator,
+		MarketData:  marketData,
+		PrivateData: privateData,
 	})
 
 	// Admin API on a separate port (default :8081, override with ADMIN_PORT).
@@ -109,7 +113,7 @@ func main() {
 		}
 	}()
 
-	log.Println("gateway listening on :8080 (dev auth: X-USER-ID header, demo users 1 and 2 seeded, ws at /ws/public)")
+	log.Println("gateway listening on :8080 (dev auth: X-USER-ID header, demo users 1 and 2 seeded, ws at /ws/public and /ws/private)")
 	if err := http.ListenAndServe(":8080", server.Handler()); err != nil {
 		log.Fatal(err)
 	}

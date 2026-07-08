@@ -11,14 +11,14 @@ This repository is a clean-room implementation. Public exchange repositories are
 - Repository interface (implemented): `AccountRepository` and `LedgerRepository` abstractions (`services/account/account`, `services/ledger/ledger`). In-memory is the default; PostgreSQL skeleton available under build tag `postgres`.
 - Wallet flows (implemented, mock adapter): deposit address, confirmed deposits and broadcasted withdrawals settle as balanced idempotent ledger transactions; withdrawal requests lock amount+fee, audited approval/rejection, rejection releases the lock.
 - Matching recovery (implemented): fsynced command WAL (`services/matching-engine/wal`), orderbook snapshot/restore with SHA-256 book hash, atomic checkpoints, and deterministic replay proven by `tests/replay` (full replay, snapshot + tail, repeated recovery).
-- Market data WebSocket (implemented): `/ws/public` streams trades, orderbook snapshots, ticker, and kline candles with per-channel monotonic sequences (`services/market-data`), served over a dependency-free RFC 6455 implementation (`libs/ws`). Ticker aggregates 24h rolling stats; kline supports 9 intervals (1m–1w).
+- Market data WebSocket (implemented): `/ws/public` streams trades, orderbook snapshots, ticker, and kline candles with per-channel monotonic sequences (`services/market-data`); `/ws/private` streams authenticated user orders, fills, and balances. Served over a dependency-free RFC 6455 implementation (`libs/ws`). Ticker aggregates 24h rolling stats; kline supports 9 intervals (1m–1w).
 - Gateway REST API (implemented): public market data plus authenticated trading, account, and wallet endpoints following `docs/api/REST_API_SPEC.md`. Authentication is a development placeholder (`X-USER-ID` header); API key + HMAC signing is pending.
 - Admin API (implemented): separate port `:8081` serving market halt/resume, user/balance queries, withdrawal approval/rejection, audit log, and ledger inspection (`services/admin-api`). Dev auth via `X-ADMIN-ID` header; all state changes are audit-logged.
 - User web shell (`apps/web`): connects to the local gateway with a mock-data fallback. Admin shell (`apps/admin`) remains static.
 - Compliance gating: KYC/AML/listing decision packages, readiness gates for spot launch and derivatives, evidence register, RBAC, tamper-evident audit log.
 - Overall design contracts: REST/WebSocket specs, proto interfaces, database DDL, event model, wallet/risk/futures design.
 
-Not yet implemented: PostgreSQL storage queries, snapshot scheduling and WAL rotation, orderbook deltas and private streams, testnet wallet adapters, futures/margin/liquidation services, admin frontend integration.
+Not yet implemented: PostgreSQL storage queries, snapshot scheduling and WAL rotation, orderbook deltas, testnet wallet adapters, futures/margin/liquidation services, admin frontend integration.
 
 ## Safety Defaults
 

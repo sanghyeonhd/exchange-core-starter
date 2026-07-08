@@ -75,6 +75,7 @@ type Exchange struct {
 	lastJournalSeq int64
 
 	marketData MarketDataPublisher
+	privateData PrivateDataPublisher
 	tickerAgg  *marketdata.TickerAggregator
 	klineAgg   *marketdata.KlineAggregator
 }
@@ -84,6 +85,14 @@ type Exchange struct {
 type MarketDataPublisher interface {
 	PublishTrade(symbol string, data marketdata.TradeData)
 	PublishOrderbook(symbol string, data marketdata.OrderbookData)
+}
+
+// PrivateDataPublisher receives private user events. Implemented by
+// marketdata.PrivateHub; publishing must never block the matching path.
+type PrivateDataPublisher interface {
+	PublishOrder(userID int64, symbol string, data marketdata.OrderData)
+	PublishFill(userID int64, symbol string, data marketdata.FillData)
+	PublishBalance(userID int64, data marketdata.BalanceData)
 }
 
 func New(market oms.Market) (*Exchange, error) {
@@ -176,6 +185,14 @@ func (e *Exchange) SetMarketData(publisher MarketDataPublisher) {
 	e.marketData = publisher
 }
 
+// SetPrivateData enables private data publication. Must be set before
+// the exchange serves traffic.
+func (e *Exchange) SetPrivateData(publisher PrivateDataPublisher) {
+	e.mu.Lock()
+	defer e.mu.Unlock()
+	e.privateData = publisher
+}
+
 // SetAggregators enables ticker and kline aggregation. Must be set before
 // the exchange serves traffic.
 func (e *Exchange) SetAggregators(ticker *marketdata.TickerAggregator, kline *marketdata.KlineAggregator) {
@@ -228,6 +245,66 @@ func (e *Exchange) priceLevels(levels []engine.Level) []marketdata.PriceLevel {
 	return out
 }
 
+func (e *Exchange) publishOrder(order engine.Order, clientOrderID string) {
+	if e.privateData == nil {
+		return
+	}
+	e.privateData.PublishOrder(order.UserID, e.market.Symbol, marketdata.OrderData{
+		OrderID:          order.ID,
+		ClientOrderID:    clientOrderID,
+		Symbol:           order.Symbol,
+		Side:             string(order.Side),
+		Type:             string(order.Type),
+		Price:            decimal.New(order.Price, e.market.PriceScale).String(),
+		Quantity:         decimal.New(order.Quantity, e.market.QuantityScale).String(),
+		ExecutedQuantity: decimal.New(order.ExecutedQuantity, e.market.QuantityScale).String(),
+		Status:           string(order.Status),
+	})
+}
+
+func (e *Exchange) publishFill(order engine.Order, clientOrderID string, trade engine.Trade, fee int64, feeAsset string) {
+	if e.privateData == nil {
+		return
+	}
+	scale := e.market.QuantityScale
+	if feeAsset == e.market.QuoteAsset {
+		scale = e.market.PriceScale
+	}
+	e.privateData.PublishFill(order.UserID, e.market.Symbol, marketdata.FillData{
+		OrderID:  order.ID,
+		Symbol:   order.Symbol,
+		TradeID:  trade.Sequence,
+		Price:    decimal.New(trade.Price, e.market.PriceScale).String(),
+		Quantity: decimal.New(trade.Quantity, e.market.QuantityScale).String(),
+		Fee:      decimal.New(fee, scale).String(),
+		FeeAsset: feeAsset,
+	})
+}
+
+func (e *Exchange) publishBalance(userID int64, asset string) {
+	if e.privateData == nil {
+		return
+	}
+	key := userAssetKey(userID, asset)
+	accountID, ok := e.userAccounts[key]
+	if !ok {
+		return
+	}
+	bal, err := e.accounts.Balance(accountID)
+	if err != nil {
+		return
+	}
+	scale := e.market.QuantityScale
+	if asset == e.market.QuoteAsset {
+		scale = e.market.PriceScale
+	}
+	e.privateData.PublishBalance(userID, marketdata.BalanceData{
+		Asset:     asset,
+		Available: decimal.New(bal.Available, scale).String(),
+		Locked:    decimal.New(bal.Locked, scale).String(),
+	})
+}
+
 // Checkpoint pairs an orderbook snapshot with the journal sequence of the
 // last command applied to it, taken atomically. Recovery restores the book
 // from the snapshot and replays journal commands after WALSequence.
@@ -278,7 +355,11 @@ func (e *Exchange) Deposit(depositID string, userID int64, asset string, amount 
 	if err != nil {
 		return err
 	}
-	return e.accounts.ApplyTransaction(tx)
+	err = e.accounts.ApplyTransaction(tx)
+	if err == nil {
+		e.publishBalance(userID, asset)
+	}
+	return err
 }
 
 // LockWithdrawal reserves amount+fee before a withdrawal enters review.
@@ -290,7 +371,11 @@ func (e *Exchange) LockWithdrawal(userID int64, asset string, amount int64) erro
 	if err != nil {
 		return err
 	}
-	return e.accounts.Reserve(accountID, amount)
+	err = e.accounts.Reserve(accountID, amount)
+	if err == nil {
+		e.publishBalance(userID, asset)
+	}
+	return err
 }
 
 // ReleaseWithdrawal returns a rejected withdrawal's locked funds.
@@ -302,7 +387,11 @@ func (e *Exchange) ReleaseWithdrawal(userID int64, asset string, amount int64) e
 	if err != nil {
 		return err
 	}
-	return e.accounts.Release(accountID, amount)
+	err = e.accounts.Release(accountID, amount)
+	if err == nil {
+		e.publishBalance(userID, asset)
+	}
+	return err
 }
 
 // SettleWithdrawal converts a broadcasted withdrawal into ledger entries.
@@ -338,7 +427,11 @@ func (e *Exchange) SettleWithdrawal(withdrawalID string, userID int64, asset str
 	if err != nil {
 		return err
 	}
-	return e.accounts.ApplyTransaction(tx)
+	err = e.accounts.ApplyTransaction(tx)
+	if err == nil {
+		e.publishBalance(userID, asset)
+	}
+	return err
 }
 
 func (e *Exchange) PlaceOrder(req PlaceOrderRequest) (PlaceOrderResult, error) {
@@ -385,6 +478,7 @@ func (e *Exchange) PlaceOrder(req PlaceOrderRequest) (PlaceOrderResult, error) {
 	if err := e.accounts.Reserve(reserveAccount, reservation.Amount); err != nil {
 		return PlaceOrderResult{}, err
 	}
+	e.publishBalance(req.UserID, reservation.Asset)
 
 	engineOrder := oms.ToEngineOrder(orderReq)
 	if err := e.journalCommand(wal.Command{
@@ -433,6 +527,7 @@ func (e *Exchange) PlaceOrder(req PlaceOrderRequest) (PlaceOrderResult, error) {
 	}
 
 	e.publishOrderbook()
+	e.publishOrder(state.order, state.clientOrderID)
 
 	return PlaceOrderResult{Order: state.order, Trades: result.Trades}, nil
 }
@@ -470,9 +565,12 @@ func (e *Exchange) CancelOrder(userID, orderID int64) (engine.Order, error) {
 			return engine.Order{}, err
 		}
 		state.reserved = 0
+		e.publishBalance(userID, e.market.QuoteAsset)
+		e.publishBalance(userID, e.market.BaseAsset)
 	}
 	state.order.Status = engine.OrderCanceled
 	e.publishOrderbook()
+	e.publishOrder(state.order, state.clientOrderID)
 	return state.order, nil
 }
 
@@ -605,6 +703,16 @@ func (e *Exchange) settleTrade(trade engine.Trade) error {
 
 	e.trades = append(e.trades, trade)
 	e.publishTrade(trade)
+
+	e.publishFill(buyer.order, buyer.clientOrderID, trade, amounts.BuyerFee, e.market.QuoteAsset)
+	e.publishFill(seller.order, seller.clientOrderID, trade, amounts.SellerFee, e.market.QuoteAsset)
+	e.publishOrder(buyer.order, buyer.clientOrderID)
+	e.publishOrder(seller.order, seller.clientOrderID)
+	e.publishBalance(buyer.order.UserID, e.market.QuoteAsset)
+	e.publishBalance(buyer.order.UserID, e.market.BaseAsset)
+	e.publishBalance(seller.order.UserID, e.market.QuoteAsset)
+	e.publishBalance(seller.order.UserID, e.market.BaseAsset)
+
 	return nil
 }
 

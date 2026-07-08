@@ -106,6 +106,11 @@ func Accept(w http.ResponseWriter, r *http.Request) (*Conn, error) {
 
 // Dial connects to a ws:// URL such as ws://127.0.0.1:8080/ws/public.
 func Dial(url string) (*Conn, error) {
+	return DialWithHeader(url, nil)
+}
+
+// DialWithHeader connects to a ws:// URL with custom headers.
+func DialWithHeader(url string, header http.Header) (*Conn, error) {
 	rest, ok := strings.CutPrefix(url, "ws://")
 	if !ok {
 		return nil, fmt.Errorf("%w: only ws:// URLs are supported", ErrNotWebSocket)
@@ -130,7 +135,14 @@ func Dial(url string) (*Conn, error) {
 		"Upgrade: websocket\r\n" +
 		"Connection: Upgrade\r\n" +
 		"Sec-WebSocket-Key: " + key + "\r\n" +
-		"Sec-WebSocket-Version: 13\r\n\r\n"
+		"Sec-WebSocket-Version: 13\r\n"
+
+	for k, v := range header {
+		for _, val := range v {
+			request += k + ": " + val + "\r\n"
+		}
+	}
+	request += "\r\n"
 	if _, err := rw.WriteString(request); err != nil {
 		conn.Close()
 		return nil, err

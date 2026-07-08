@@ -26,25 +26,28 @@ import (
 )
 
 type Deps struct {
-	Exchange   *spotexchange.Exchange
-	Wallet     *wallet.Coordinator
-	MarketData *marketdata.Hub
-	Readiness  readiness.Status
+	Exchange    *spotexchange.Exchange
+	Wallet      *wallet.Coordinator
+	MarketData  *marketdata.Hub
+	PrivateData *marketdata.PrivateHub
+	Readiness   readiness.Status
 }
 
 type Server struct {
-	exchange   *spotexchange.Exchange
-	wallet     *wallet.Coordinator
-	marketData *marketdata.Hub
-	status     readiness.Status
+	exchange    *spotexchange.Exchange
+	wallet      *wallet.Coordinator
+	marketData  *marketdata.Hub
+	privateData *marketdata.PrivateHub
+	status      readiness.Status
 }
 
 func NewServer(deps Deps) *Server {
 	return &Server{
-		exchange:   deps.Exchange,
-		wallet:     deps.Wallet,
-		marketData: deps.MarketData,
-		status:     deps.Readiness,
+		exchange:    deps.Exchange,
+		wallet:      deps.Wallet,
+		marketData:  deps.MarketData,
+		privateData: deps.PrivateData,
+		status:      deps.Readiness,
 	}
 }
 
@@ -58,6 +61,7 @@ func (s *Server) Handler() http.Handler {
 	mux.HandleFunc("GET /api/v1/readiness/spot-launch", s.spotLaunchReadiness)
 	mux.HandleFunc("GET /api/v1/readiness/derivatives", s.derivativesReadiness)
 	mux.HandleFunc("GET /ws/public", s.publicStream)
+	mux.HandleFunc("GET /ws/private", s.authenticated(s.privateStream))
 
 	mux.HandleFunc("POST /api/v1/orders", s.authenticated(s.placeOrder))
 	mux.HandleFunc("DELETE /api/v1/orders/{order_id}", s.authenticated(s.cancelOrder))
@@ -224,6 +228,51 @@ func (s *Server) publicStream(w http.ResponseWriter, r *http.Request) {
 		case envelope, ok := <-subscription.C:
 			if !ok {
 				// Dropped as a slow consumer; client must reconnect.
+				return
+			}
+			payload, err := json.Marshal(envelope)
+			if err != nil {
+				return
+			}
+			if err := conn.WriteText(payload); err != nil {
+				return
+			}
+		case <-done:
+			return
+		}
+	}
+}
+
+// privateStream streams all private channels (orders, fills, balances)
+// over WebSocket per docs/api/WEBSOCKET_SPEC.md. 
+func (s *Server) privateStream(w http.ResponseWriter, r *http.Request, userID int64) {
+	if s.privateData == nil {
+		writeError(w, r, http.StatusServiceUnavailable, "PRIVATE_DATA_UNAVAILABLE", "private data feed not configured")
+		return
+	}
+	conn, err := ws.Accept(w, r)
+	if err != nil {
+		return
+	}
+	defer conn.Close()
+
+	subscription := s.privateData.Subscribe(userID, 256)
+	defer subscription.Cancel()
+
+	done := make(chan struct{})
+	go func() {
+		defer close(done)
+		for {
+			if _, _, err := conn.ReadMessage(); err != nil {
+				return
+			}
+		}
+	}()
+
+	for {
+		select {
+		case envelope, ok := <-subscription.C:
+			if !ok {
 				return
 			}
 			payload, err := json.Marshal(envelope)

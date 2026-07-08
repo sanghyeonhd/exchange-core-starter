@@ -46,6 +46,9 @@ func newTestServer(t *testing.T, status readiness.Status) *Server {
 	hub := marketdata.NewHub()
 	exchange.SetMarketData(hub)
 
+	privateHub := marketdata.NewPrivateHub()
+	exchange.SetPrivateData(privateHub)
+
 	walletService := wallet.NewService(
 		wallet.Config{MainnetEnabled: false, WithdrawalsEnabled: false},
 		wallet.NewMockAdapter(),
@@ -53,10 +56,11 @@ func newTestServer(t *testing.T, status readiness.Status) *Server {
 		audit.NewLog(),
 	)
 	return NewServer(Deps{
-		Exchange:   exchange,
-		Wallet:     wallet.NewCoordinator(walletService, exchange),
-		MarketData: hub,
-		Readiness:  status,
+		Exchange:    exchange,
+		Wallet:      wallet.NewCoordinator(walletService, exchange),
+		MarketData:  hub,
+		PrivateData: privateHub,
+		Readiness:   status,
 	})
 }
 
@@ -107,6 +111,53 @@ func TestPublicWebSocketStream(t *testing.T) {
 	afterMatch := readEnvelope()
 	if afterMatch.Channel != marketdata.ChannelOrderbook || afterMatch.Sequence != 2 {
 		t.Fatalf("afterMatch = %+v", afterMatch)
+	}
+}
+
+func TestPrivateWebSocketStream(t *testing.T) {
+	server := newTestServer(t, readiness.Status{})
+	httpServer := httptest.NewServer(server.Handler())
+	defer httpServer.Close()
+
+	headers := http.Header{}
+	headers.Add("X-USER-ID", "1")
+	conn, err := ws.DialWithHeader("ws"+strings.TrimPrefix(httpServer.URL, "http")+"/ws/private", headers)
+	if err != nil {
+		t.Fatalf("DialWithHeader: %v", err)
+	}
+	defer conn.Close()
+
+	readEnvelope := func() marketdata.Envelope {
+		t.Helper()
+		_, payload, err := conn.ReadMessage()
+		if err != nil {
+			t.Fatalf("ReadMessage: %v", err)
+		}
+		var envelope marketdata.Envelope
+		if err := json.Unmarshal(payload, &envelope); err != nil {
+			t.Fatalf("decode %s: %v", payload, err)
+		}
+		return envelope
+	}
+
+	request(t, server, http.MethodPost, "/api/v1/orders",
+		`{"client_order_id":"a1","symbol":"BTC-USDT","side":"BUY","type":"LIMIT","price":"50000.00","quantity":"0.00100000"}`, 1)
+
+	sawOrder := false
+	sawBalance := false
+	for i := 0; i < 5; i++ {
+		env := readEnvelope()
+		if env.Channel == marketdata.ChannelOrders {
+			sawOrder = true
+		} else if env.Channel == marketdata.ChannelBalances {
+			sawBalance = true
+		}
+		if sawOrder && sawBalance {
+			break
+		}
+	}
+	if !sawOrder || !sawBalance {
+		t.Fatalf("expected to see order and balance updates, got order=%v balance=%v", sawOrder, sawBalance)
 	}
 }
 
