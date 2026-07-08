@@ -8,6 +8,7 @@ This repository is a clean-room implementation. Public exchange repositories are
 
 - Phase 0: source clone/audit scripts and architecture decisions.
 - Phase 1: deterministic spot orderbook matching with fixed-point integer values.
+- Overall design contracts: REST/WebSocket specs, proto interfaces, database DDL, event model, wallet/risk/futures design.
 
 ## Safety Defaults
 
@@ -24,7 +25,15 @@ make clone-sources
 make audit-sources
 ```
 
+## Design Entry Points
+
+- [Architecture index](docs/architecture/README.md)
+- [REST API spec](docs/api/REST_API_SPEC.md)
+- [WebSocket spec](docs/api/WEBSOCKET_SPEC.md)
+- [PostgreSQL schema](docs/database/POSTGRES_SCHEMA.sql)
+- [Wallet security model](docs/security/WALLET_SECURITY_MODEL.md)
+- [License and source policy](docs/security/LICENSE_AND_SOURCE_POLICY.md)
+
 ## Analysis Sources
 
 Run `./scripts/clone-sources.sh` to clone the reference repositories into `~/exchange-lab/sources`.
-

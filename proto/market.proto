@@ -1,0 +1,41 @@
+syntax = "proto3";
+
+package exchange.market.v1;
+
+option go_package = "github.com/exchange-core-starter/exchange-core-starter/proto/market/v1;marketv1";
+
+message Market {
+  string symbol = 1;
+  string base_asset = 2;
+  string quote_asset = 3;
+  string market_type = 4;
+  string status = 5;
+  int32 price_scale = 6;
+  int32 quantity_scale = 7;
+  int64 min_order_qty = 8;
+  int64 min_notional = 9;
+  int64 tick_size = 10;
+  int64 lot_size = 11;
+  int64 maker_fee_rate = 12;
+  int64 taker_fee_rate = 13;
+}
+
+message GetMarketRequest {
+  string symbol = 1;
+}
+
+message GetMarketResponse {
+  Market market = 1;
+}
+
+message ListMarketsRequest {}
+
+message ListMarketsResponse {
+  repeated Market markets = 1;
+}
+
+service MarketService {
+  rpc GetMarket(GetMarketRequest) returns (GetMarketResponse);
+  rpc ListMarkets(ListMarketsRequest) returns (ListMarketsResponse);
+}
+

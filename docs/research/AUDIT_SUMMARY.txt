@@ -50,7 +50,10 @@ language_summary:
     31 gitignore
     29 project
     28 classpath
-secret_scan: skipped, gitleaks not installed
+secret_scan: running gitleaks
+5:59AM INF 12 commits scanned.
+5:59AM INF scanned ~12559433 bytes (12.56 MB) in 15.7s
+5:59AM WRN leaks found: 18
 
 ## coincoin-crypto-exchange
 path: /Users/deniallee/exchange-lab/sources/coincoin-crypto-exchange
@@ -109,7 +112,11 @@ language_summary:
     72 js
     39 xcscheme
     34 md
-secret_scan: skipped, gitleaks not installed
+secret_scan: running gitleaks
+5:59AM INF Unknown SCM platform. Use --platform to include links in findings. host=gitee.com
+5:59AM INF 30 commits scanned.
+5:59AM INF scanned ~30966983 bytes (30.97 MB) in 17.6s
+5:59AM WRN leaks found: 27
 
 ## coinglobalvip
 path: /Users/deniallee/exchange-lab/sources/coinglobalvip
@@ -147,7 +154,11 @@ language_summary:
     15 less
     15 gitignore
     14 sample
-secret_scan: skipped, gitleaks not installed
+secret_scan: running gitleaks
+5:59AM INF Unknown SCM platform. Use --platform to include links in findings. host=gitee.com
+5:59AM INF 17 commits scanned.
+5:59AM INF scanned ~22128940 bytes (22.13 MB) in 20.3s
+5:59AM WRN leaks found: 22
 
 ## exchange-core
 path: /Users/deniallee/exchange-lab/sources/exchange-core
@@ -170,7 +181,10 @@ language_summary:
      1 md
      1 idx
      1 gitignore
-secret_scan: skipped, gitleaks not installed
+secret_scan: running gitleaks
+5:59AM INF 259 commits scanned.
+5:59AM INF scanned ~3217213 bytes (3.22 MB) in 624ms
+5:59AM INF no leaks found
 
 ## frizo-exchange
 path: /Users/deniallee/exchange-lab/sources/frizo-exchange
@@ -194,7 +208,10 @@ language_summary:
      1 git/refs/remotes/origin/HEAD
      1 git/refs/heads/main
      1 git/packed-refs
-secret_scan: skipped, gitleaks not installed
+secret_scan: running gitleaks
+5:59AM INF 5 commits scanned.
+5:59AM INF scanned ~135037 bytes (135.04 KB) in 111ms
+5:59AM INF no leaks found
 
 ## futures-engine
 path: /Users/deniallee/exchange-lab/sources/futures-engine
@@ -217,7 +234,10 @@ language_summary:
      1 local
      1 json
      1 idx
-secret_scan: skipped, gitleaks not installed
+secret_scan: running gitleaks
+5:59AM INF 23 commits scanned.
+5:59AM INF scanned ~191434 bytes (191.43 KB) in 106ms
+5:59AM INF no leaks found
 
 ## omx-engine
 path: /Users/deniallee/exchange-lab/sources/omx-engine
@@ -239,7 +259,10 @@ language_summary:
      3 json
      2 txt
      1 rev
-secret_scan: skipped, gitleaks not installed
+secret_scan: running gitleaks
+6:01AM INF 152 commits scanned.
+6:01AM INF scanned ~709617412 bytes (709.62 MB) in 1m37.9s
+6:01AM INF no leaks found
 
 ## opencex
 path: /Users/deniallee/exchange-lab/sources/opencex
@@ -261,7 +284,10 @@ language_summary:
      1 gitignore
      1 git/refs/remotes/origin/HEAD
      1 git/refs/heads/master
-secret_scan: skipped, gitleaks not installed
+secret_scan: running gitleaks
+6:01AM INF 52 commits scanned.
+6:01AM INF scanned ~76958 bytes (76.96 KB) in 137ms
+6:01AM INF no leaks found
 
 ## opex-core
 path: /Users/deniallee/exchange-lab/sources/opex-core
@@ -311,5 +337,8 @@ language_summary:
      3 md
      2 sh
      2 properties
-secret_scan: skipped, gitleaks not installed
+secret_scan: running gitleaks
+6:01AM INF 923 commits scanned.
+6:01AM INF scanned ~9942068 bytes (9.94 MB) in 1.62s
+6:01AM WRN leaks found: 98
 

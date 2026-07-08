@@ -40,7 +40,7 @@
 
 ## 5. 보안 이슈
 
-- 하드코딩 secret: gitleaks 미설치로 미검증
+- 하드코딩 secret: gitleaks 기준 no leaks found
 - SQL injection 가능성: 미검증
 - 인증/인가 문제: 미검증
 - 출금 승인 문제: 미검증
@@ -52,4 +52,3 @@
 - 반영: 기능 목록 점검
 - 보류: UI 우선순위
 - 제외: 실서비스 베이스 사용
-

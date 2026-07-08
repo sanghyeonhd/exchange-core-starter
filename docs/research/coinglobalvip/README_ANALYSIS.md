@@ -40,7 +40,7 @@
 
 ## 5. 보안 이슈
 
-- 하드코딩 secret: gitleaks 미설치로 미검증
+- 하드코딩 secret: gitleaks leak 후보 발견, 구조 참고만
 - SQL injection 가능성: 미검증
 - 인증/인가 문제: 위험 높음, 구조 참고만
 - 출금 승인 문제: wallet RPC 보안 모델 별도 검토 필요
@@ -52,4 +52,3 @@
 - 반영: wallet adapter와 admin 승인 플로우의 기능 범위
 - 보류: 일부 운영 화면 기능 목록
 - 제외: 원본 운영 코드 직접 사용
-

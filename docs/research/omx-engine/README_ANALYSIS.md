@@ -40,7 +40,7 @@
 
 ## 5. 보안 이슈
 
-- 하드코딩 secret: gitleaks 미설치로 미검증
+- 하드코딩 secret: gitleaks 기준 no leaks found
 - SQL injection 가능성: 범위 미확인
 - 인증/인가 문제: 범위 외 추정
 - 출금 승인 문제: 범위 외 추정
@@ -52,4 +52,3 @@
 - 반영: derivatives matching/settlement 개념 검토
 - 보류: 자료구조 세부
 - 제외: 코드 복사
-

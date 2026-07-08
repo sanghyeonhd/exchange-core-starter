@@ -40,7 +40,7 @@
 
 ## 5. 보안 이슈
 
-- 하드코딩 secret: gitleaks 미설치로 미검증
+- 하드코딩 secret: gitleaks leak 후보 발견, 구조 참고만
 - SQL injection 가능성: 미검증
 - 인증/인가 문제: Keycloak 연계 구조 추후 검토
 - 출금 승인 문제: wallet/bc-gateway 추후 검토
@@ -52,4 +52,3 @@
 - 반영: 모듈 경계, accountant 분리, matching gateway 분리 개념
 - 보류: Kotlin/Maven 런타임 구조
 - 제외: 검토 전 원본 코드 복사
-

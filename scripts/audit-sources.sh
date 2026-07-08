@@ -23,10 +23,9 @@ for repo in "$ROOT"/*; do
   find "$repo" -type f | sed 's/.*\.//' | sort | uniq -c | sort -nr | head -n 12 | sed 's/^/  /'
   if command -v gitleaks >/dev/null 2>&1; then
     echo "secret_scan: running gitleaks"
-    gitleaks detect --source "$repo" --no-banner --redact || true
+    gitleaks detect --source "$repo" --no-banner --redact 2>&1 || true
   else
     echo "secret_scan: skipped, gitleaks not installed"
   fi
   echo
 done
-

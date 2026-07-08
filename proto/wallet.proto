@@ -1,0 +1,46 @@
+syntax = "proto3";
+
+package exchange.wallet.v1;
+
+option go_package = "github.com/exchange-core-starter/exchange-core-starter/proto/wallet/v1;walletv1";
+
+message DepositAddress {
+  int64 id = 1;
+  int64 user_id = 2;
+  string asset = 3;
+  string network = 4;
+  string address = 5;
+  string memo = 6;
+  string status = 7;
+}
+
+message GetDepositAddressRequest {
+  int64 user_id = 1;
+  string asset = 2;
+  string network = 3;
+}
+
+message GetDepositAddressResponse {
+  DepositAddress deposit_address = 1;
+}
+
+message RequestWithdrawalRequest {
+  string request_id = 1;
+  int64 user_id = 2;
+  string asset = 3;
+  string network = 4;
+  string address = 5;
+  string memo = 6;
+  int64 amount = 7;
+}
+
+message RequestWithdrawalResponse {
+  int64 withdrawal_id = 1;
+  string status = 2;
+}
+
+service WalletService {
+  rpc GetDepositAddress(GetDepositAddressRequest) returns (GetDepositAddressResponse);
+  rpc RequestWithdrawal(RequestWithdrawalRequest) returns (RequestWithdrawalResponse);
+}
+

@@ -1,0 +1,45 @@
+syntax = "proto3";
+
+package exchange.trade.v1;
+
+option go_package = "github.com/exchange-core-starter/exchange-core-starter/proto/trade/v1;tradev1";
+
+message Trade {
+  int64 trade_id = 1;
+  string market = 2;
+  int64 maker_order_id = 3;
+  int64 taker_order_id = 4;
+  int64 maker_user_id = 5;
+  int64 taker_user_id = 6;
+  string taker_side = 7;
+  int64 price = 8;
+  int64 quantity = 9;
+  int64 maker_fee = 10;
+  int64 taker_fee = 11;
+  int64 match_sequence = 12;
+  int64 created_at_ms = 13;
+}
+
+message GetTradeRequest {
+  string market = 1;
+  int64 trade_id = 2;
+}
+
+message GetTradeResponse {
+  Trade trade = 1;
+}
+
+message ListRecentTradesRequest {
+  string market = 1;
+  int32 limit = 2;
+}
+
+message ListRecentTradesResponse {
+  repeated Trade trades = 1;
+}
+
+service TradeService {
+  rpc GetTrade(GetTradeRequest) returns (GetTradeResponse);
+  rpc ListRecentTrades(ListRecentTradesRequest) returns (ListRecentTradesResponse);
+}
+
